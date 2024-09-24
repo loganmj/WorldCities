@@ -1,2 +1,2 @@
 # WorldCities
-Use EntityFramework to retrieve and manipulated world city data.
+A sample web application to demonstrate how to interact with ASP.NET, Angular, Entity Framework Core and a SQL Database.
