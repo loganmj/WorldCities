@@ -24,11 +24,11 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "glob": "^11.0.0",
     "jest-editor-support": "*",
     "rollup": "^3.29.5",
     "run-script-os": "*",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
   },
   "devDependencies": {
@@ -44,6 +44,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "schematics-scss-migrate": "^2.3.17",
+    "tslib": "^2.7.0",
     "typescript": "~5.5.2"
   }
 }
