@@ -1,6 +1,44 @@
-﻿namespace WorldCities.Server.Data.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WorldCities.Server.Data.Models;
+
+/// <summary>
+/// Data model for a City.
+/// </summary>
+public class City
 {
-    public class City
-    {
-    }
+    #region Properties
+
+    /// <summary>
+    /// The unique id and primary key for this city.
+    /// </summary>
+    [Key]
+    [Required]
+    public int ID { get; set; }
+
+    /// <summary>
+    /// The name of the city (in UTF8 format).
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// The latitude of the city.
+    /// </summary>
+    [Column(TypeName = "decimal(7,4)")]
+    public decimal Latitude { get; set; }
+
+    /// <summary>
+    /// The longitude of the city.
+    /// </summary>
+    [Column(TypeName = "decimal(7,4")]
+    public decimal Longitude { get; set; }
+
+    /// <summary>
+    /// The id of the associated country.
+    /// Used as a foreign key.
+    /// </summary>
+    public int CountryId { get; set; }
+
+    #endregion
 }
