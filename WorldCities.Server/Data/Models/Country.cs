@@ -31,5 +31,10 @@ public class Country
     /// </summary>
     public required string IS03 { get; set; }
 
+    /// <summary>
+    /// A collection of all the cities related to this country.
+    /// </summary>
+    public ICollection<City>? Cities { get; set; }
+
     #endregion
 }
