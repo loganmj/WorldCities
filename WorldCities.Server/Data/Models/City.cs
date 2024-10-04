@@ -38,7 +38,13 @@ public class City
     /// The id of the associated country.
     /// Used as a foreign key.
     /// </summary>
+    [ForeignKey(nameof(Country))]
     public int CountryId { get; set; }
+
+    /// <summary>
+    /// The country related to this city.
+    /// </summary>
+    public Country? Country { get; set; }
 
     #endregion
 }

@@ -1,6 +1,35 @@
-﻿namespace WorldCities.Server.Data.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WorldCities.Server.Data.Models;
+
+/// <summary>
+/// Data model for a country object.
+/// </summary>
+public class Country
 {
-    public class Country
-    {
-    }
+    #region Properties
+
+    /// <summary>
+    /// The unique id and primary key for this country.
+    /// </summary>
+    [Key]
+    [Required]
+    public int Id { get; set; }
+
+    /// <summary>
+    /// The country name (in UTF8 format).
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// The country code (in ISO 3166-1 ALPHA-2 format).
+    /// </summary>
+    public required string IS02 { get; set; }
+
+    /// <summary>
+    /// The country code (in ISO 3166-1 ALPHA-3 format).
+    /// </summary>
+    public required string IS03 { get; set; }
+
+    #endregion
 }
