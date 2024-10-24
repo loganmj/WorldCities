@@ -1,10 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WorldCities.Server.Data.Models;
 
 /// <summary>
 /// Data model for a country object.
 /// </summary>
+[Table("Countries")]
+[Index(nameof(Name))]
+[Index(nameof(IS02))]
+[Index(nameof(IS03))]
 public class Country
 {
     #region Properties
