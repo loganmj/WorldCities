@@ -6,11 +6,11 @@ using WorldCities.Server.Data.Models;
 namespace WorldCities.Server.Controllers
 {
     /// <summary>
-    /// An API controller for city data
+    /// An entity controller for Country data.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class CitiesController : ControllerBase
+    public class CountriesController : ControllerBase
     {
         #region Fields
 
@@ -24,7 +24,7 @@ namespace WorldCities.Server.Controllers
         /// Constructs a controller with the specified database context.
         /// </summary>
         /// <param name="context"></param>
-        public CitiesController(ApplicationDbContext context)
+        public CountriesController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -34,13 +34,13 @@ namespace WorldCities.Server.Controllers
         #region Private Methods
 
         /// <summary>
-        /// Checks if a city exists in the database.
+        /// Checks if a country with the specified ID exists in the database.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        private bool CityExists(int id)
+        private bool CountryExists(int id)
         {
-            return _context.Cities.Any(e => e.ID == id);
+            return _context.Countries.Any(e => e.Id == id);
         }
 
         #endregion
@@ -48,48 +48,47 @@ namespace WorldCities.Server.Controllers
         #region Public Methods
 
         /// <summary>
-        /// Gets a list of all cities from the database.
+        /// Gets a list of all the country objects.
         /// </summary>
-        /// <returns>Returns an IEnumerable JSON array containing all of the cities in the database.</returns>
+        /// <returns>Returns an IEnumerable JSON array containing all of the countires in the database.</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<City>>> GetCities()
+        public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
-            return await _context.Cities.ToListAsync();
+            return await _context.Countries.ToListAsync();
         }
 
         /// <summary>
-        /// Gets a city with the specified ID from the database.
+        /// Gets a Country with the specified ID.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Returns a JSON object containing a single City.</returns>
+        /// <returns>A JSON object containing a single country.</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<City>> GetCity(int id)
+        public async Task<ActionResult<Country>> GetCountry(int id)
         {
-            var city = await _context.Cities.FindAsync(id);
+            var country = await _context.Countries.FindAsync(id);
 
-            if (city == null)
+            if (country == null)
             {
                 return NotFound();
             }
 
-            return city;
+            return country;
         }
 
         /// <summary>
-        /// Modifies a City with the specified ID.
+        /// Modifies a country with the specified ID.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="city"></param>
-        /// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <param name="country"></param>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCity(int id, City city)
+        public async Task<IActionResult> PutCountry(int id, Country country)
         {
-            if (id != city.ID)
+            if (id != country.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(city).State = EntityState.Modified;
+            _context.Entry(country).State = EntityState.Modified;
 
             try
             {
@@ -97,7 +96,7 @@ namespace WorldCities.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CityExists(id))
+                if (!CountryExists(id))
                 {
                     return NotFound();
                 }
@@ -111,33 +110,32 @@ namespace WorldCities.Server.Controllers
         }
 
         /// <summary>
-        /// Adds a new city to the database.
+        /// Adds a new country to the database.
         /// </summary>
-        /// <param name="city"></param>
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <param name="country"></param>
         [HttpPost]
-        public async Task<ActionResult<City>> PostCity(City city)
+        public async Task<ActionResult<Country>> PostCountry(Country country)
         {
-            _context.Cities.Add(city);
+            _context.Countries.Add(country);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCity", new { id = city.ID }, city);
+            return CreatedAtAction("GetCountry", new { id = country.Id }, country);
         }
 
         /// <summary>
-        /// Deletes a city with the specified ID from the database.
+        /// Deletes a country with the specified ID from the database.
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCity(int id)
+        public async Task<IActionResult> DeleteCountry(int id)
         {
-            var city = await _context.Cities.FindAsync(id);
-            if (city == null)
+            var country = await _context.Countries.FindAsync(id);
+            if (country == null)
             {
                 return NotFound();
             }
 
-            _context.Cities.Remove(city);
+            _context.Countries.Remove(country);
             await _context.SaveChangesAsync();
 
             return NoContent();
