@@ -48,13 +48,16 @@ namespace WorldCities.Server.Controllers
         #region Public Methods
 
         /// <summary>
-        /// Gets a list of all cities from the database.
+        /// Gets a list of cities from the database.
+        /// Allows for server-side pagination.
         /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
         /// <returns>Returns an IEnumerable JSON array containing all of the cities in the database.</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<City>>> GetCities()
+        public async Task<ActionResult<IEnumerable<City>>> GetCities(int pageIndex = 0, int pageSize = 10)
         {
-            return await _context.Cities.ToListAsync();
+            return await _context.Cities.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync();
         }
 
         /// <summary>
