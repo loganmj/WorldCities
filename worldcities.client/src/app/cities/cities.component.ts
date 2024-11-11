@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 
 /**
-  * A data transfer component for City data objects.
+ * A data transfer component for City data objects.
  */
 export class CitiesComponent implements OnInit {
 
@@ -23,20 +23,29 @@ export class CitiesComponent implements OnInit {
   */
   public cities!: City[];
 
+  /**
+   * The columns to display in the data table.
+   */ 
+  public displayedColumns: string[] = ['id', 'name', 'latitude', 'longitude'];
+
   // #endregion
 
   // #region Constructors
 
-  // Constructs a component with a given http client object.
-  // The shorthand in the parameter creates a private HttpClient field
-  // that is accessable by the rest of the class.
+  /**
+   * Constructs a component with a given http client object.
+   * The shorthand in the parameter creates a private HttpClient field
+   * that is accessable by the rest of the class.
+   */ 
   constructor(private http: HttpClient) { }
 
   // #endregion
 
   // #region Public Methods
 
-  // A lifecycle hook that gets called when the component is initialized
+  /**
+   * A lifecycle hook that gets called when the component is initialized.
+   */ 
   public ngOnInit(): void {
     this.http.get<City[]>(environment.baseUrl + 'api/Cities').subscribe({
       next: (result) => {
