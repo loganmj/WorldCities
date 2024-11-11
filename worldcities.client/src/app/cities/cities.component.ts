@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, viewChild } from '@angular/core';
 import { City } from './city';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-cities',
@@ -17,16 +19,21 @@ export class CitiesComponent implements OnInit {
   // #region Properties
 
   /**
-  * The '!' character (definite assignment assertion operator)
-  * tells TypeScript that this property will be assigned a value before it is used,
-  * even though that cannot be confirmed at compile time.
-  */
-  public cities!: City[];
+   * The columns to display in the data table.
+   */
+  public displayedColumns: string[] = ['id', 'name', 'latitude', 'longitude'];
 
   /**
-   * The columns to display in the data table.
+   * The '!' character (definite assignment assertion operator)
+   * tells TypeScript that this property will be assigned a value before it is used,
+   * even though that cannot be confirmed at compile time.
+   */
+  public cities!: MatTableDataSource<City>;
+
+  /**
+   * A reference to the paginator in the DOM.
    */ 
-  public displayedColumns: string[] = ['id', 'name', 'latitude', 'longitude'];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   // #endregion
 
@@ -49,7 +56,8 @@ export class CitiesComponent implements OnInit {
   public ngOnInit(): void {
     this.http.get<City[]>(environment.baseUrl + 'api/Cities').subscribe({
       next: (result) => {
-        this.cities = result;
+        this.cities = new MatTableDataSource<City>(result);
+        this.cities.paginator = this.paginator;
       },
       error: (error) => console.error(error)
     });

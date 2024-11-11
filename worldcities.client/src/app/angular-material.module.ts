@@ -3,6 +3,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginator } from "@angular/material/paginator";
 
 @NgModule({
 
@@ -11,7 +12,8 @@ import { MatTableModule } from '@angular/material/table';
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
-    MatTableModule
+    MatTableModule,
+    MatPaginator
   ],
 
   // Lists modules that will be exported with this module, so they don't have to
@@ -20,7 +22,8 @@ import { MatTableModule } from '@angular/material/table';
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
-    MatTableModule
+    MatTableModule,
+    MatPaginator
   ]
 })
 
