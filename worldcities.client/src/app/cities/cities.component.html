@@ -1,1 +1,24 @@
-<p>cities works!</p>
+<h1>Cities</h1>
+
+<p>Here's a list of cities:</p>
+
+<p *ngIf="!cities"><em>Loading ...</em></p>
+
+<table [hidden="!cities"]>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let city of cities">
+      <td>{{city.id}}</td>
+      <td>{{city.name}}</td>
+      <td>{{city.latitude}}</td>
+      <td>{{city.longitude}}</td>
+    </tr>
+  </tbody>
+</table>
