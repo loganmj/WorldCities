@@ -55,9 +55,9 @@ namespace WorldCities.Server.Controllers
         /// <param name="pageSize"></param>
         /// <returns>Returns an IEnumerable JSON array containing all of the cities in the database.</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<City>>> GetCities(int pageIndex = 0, int pageSize = 10)
+        public async Task<ActionResult<PaginatedResult<City>>> GetCities(int pageIndex = 0, int pageSize = 10)
         {
-            return await _context.Cities.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync();
+            return await PaginatedResult<City>.CreateAsync(_context.Cities.AsNoTracking(), pageIndex, pageSize);
         }
 
         /// <summary>
