@@ -126,11 +126,11 @@ namespace WorldCities.Server.Data
             if (!string.IsNullOrEmpty(sortColumn) && IsValidProperty(sortColumn))
             {
                 // Format sort order to either sort ascending or sort descending.
-                // Sort descending by default.
-                sortOrder = string.Equals(sortOrder, SORT_ASCENDING, StringComparison.OrdinalIgnoreCase) ? SORT_ASCENDING : SORT_DESCENDING;
+                // Sort ascending by default.
+                sortOrder = string.Equals(sortOrder, SORT_DESCENDING, StringComparison.OrdinalIgnoreCase) ? SORT_DESCENDING : SORT_ASCENDING;
 
                 // Order the source
-                source.OrderBy($"{sortColumn} {sortOrder}");
+                source = source.OrderBy($"{sortColumn} {sortOrder}");
             }
 
             // Take only the paginated data

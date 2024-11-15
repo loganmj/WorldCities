@@ -8,7 +8,9 @@
 <div class="cities-table-container mat-elevation-z8">
   <mat-table #table
              [dataSource]="cities"
-             [hidden]="!cities">
+             [hidden]="!cities"
+             matSort
+             (matSortChange)="onSortChange($event)">
 
     <!-- Header row -->
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>/>
@@ -18,25 +20,25 @@
 
     <!-- ID column -->
     <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
       <mat-cell *matCellDef="let city">{{city.id}}</mat-cell>
     </ng-container>
 
     <!-- Name column -->
     <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
       <mat-cell *matCellDef="let city">{{city.name}}</mat-cell>
     </ng-container>
 
     <!-- Latitude column -->
     <ng-container matColumnDef="latitude">
-      <mat-header-cell *matHeaderCellDef>latitude</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>latitude</mat-header-cell>
       <mat-cell *matCellDef="let city">{{city.latitude}}</mat-cell>
     </ng-container>
 
     <!-- Longitude column -->
     <ng-container matColumnDef="longitude">
-      <mat-header-cell *matHeaderCellDef>Longitude</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Longitude</mat-header-cell>
       <mat-cell *matCellDef="let city">{{city.longitude}}</mat-cell>
     </ng-container>
 
