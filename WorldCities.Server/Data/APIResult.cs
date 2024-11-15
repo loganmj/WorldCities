@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
+using System.Reflection;
 
 namespace WorldCities.Server.Data
 {
@@ -7,6 +9,13 @@ namespace WorldCities.Server.Data
     /// </summary>
     public class APIResult<T>
     {
+        #region Constants
+
+        private const string SORT_ASCENDING = "ASC";
+        private const string SORT_DESCENDING = "DESC";
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -44,6 +53,16 @@ namespace WorldCities.Server.Data
         /// </summary>
         public bool HasNextPage => (PageIndex + 1) < TotalPages;
 
+        /// <summary>
+        /// The name of the data column to sort by. 
+        /// </summary>
+        public string? SortColumn { get; private set; }
+
+        /// <summary>
+        /// A string representation of the sorting order ("ASC" or "DESC").
+        /// </summary>
+        public string? SortOrder { get; private set; }
+
         #endregion
 
         #region Constructors
@@ -55,13 +74,36 @@ namespace WorldCities.Server.Data
         /// <param name="count"></param>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
-        private APIResult(List<T> data, int count, int pageIndex, int pageSize)
+        /// <param name="sortColumn"></param>
+        /// <param name="sortOrder"></param>
+        private APIResult(List<T> data, int count, int pageIndex, int pageSize, string? sortColumn = null, string? sortOrder = null)
         {
             Data = data;
             PageIndex = pageIndex;
             PageSize = pageSize;
             TotalCount = count;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            SortColumn = sortColumn;
+            SortOrder = sortOrder;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Checks if the given property name exists in the data.
+        /// Helps protect against SQL injection.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        /// <returns></returns>
+        private static bool IsValidProperty(string propertyName)
+        {
+            return typeof(T).GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) == null
+                ? throw new NotSupportedException($"Property: '{propertyName}' does not exist.")
+                : true;
         }
 
         #endregion
@@ -75,17 +117,27 @@ namespace WorldCities.Server.Data
         /// <param name="pageIndex">The current page index.</param>
         /// <param name="pageSize">The size of each page.</param>
         /// <returns> An APIResult object containing the paged result and all of the relevant paging navigation information.</returns>
-        public static async Task<APIResult<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
+        public static async Task<APIResult<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize, string? sortColumn = null, string? sortOrder = null)
         {
             // Gets the total number of elements in the source
             var count = await source.CountAsync();
 
-            // Alters source to only contain the paginated data
+            // Check for sort data
+            if (!string.IsNullOrEmpty(sortColumn) && IsValidProperty(sortColumn))
+            {
+                // Format sort order to either sort ascending or sort descending.
+                // Sort descending by default.
+                sortOrder = string.Equals(sortOrder, SORT_ASCENDING, StringComparison.OrdinalIgnoreCase) ? SORT_ASCENDING : SORT_DESCENDING;
+
+                // Order the source
+                source.OrderBy($"{sortColumn} {sortOrder}");
+            }
+
+            // Take only the paginated data
             source = source.Skip(pageIndex * pageSize).Take(pageSize);
-            var data = await source.ToListAsync();
 
             // Return the paginated results, and additional data
-            return new APIResult<T>(data, count, pageIndex, pageSize);
+            return new APIResult<T>(await source.ToListAsync(), count, pageIndex, pageSize);
         }
 
         #endregion
