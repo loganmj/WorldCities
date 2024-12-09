@@ -57,7 +57,18 @@ namespace WorldCities.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<APIResult<City>>> GetCities(int pageIndex = 0, int pageSize = 10, string? sortColumn = null, string? sortOrder = null)
         {
-            return await APIResult<City>.CreateAsync(_context.Cities.AsNoTracking(), pageIndex, pageSize, sortColumn, sortOrder);
+            try
+            {
+                // DEBUG
+                Console.WriteLine($"pageIndex: {pageIndex}, pageSize: {pageSize}, sortColumn: {sortColumn}, sortOrder: {sortOrder}");
+
+                return await APIResult<City>.CreateAsync(_context.Cities.AsNoTracking(), pageIndex, pageSize, sortColumn, sortOrder);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         /// <summary>

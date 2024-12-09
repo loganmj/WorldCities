@@ -13,7 +13,7 @@
              (matSortChange)="onSortChange($event)">
 
     <!-- Header row -->
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>/>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 
     <!-- Data rows -->
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
@@ -32,7 +32,7 @@
 
     <!-- Latitude column -->
     <ng-container matColumnDef="latitude">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>latitude</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Latitude</mat-header-cell>
       <mat-cell *matCellDef="let city">{{city.latitude}}</mat-cell>
     </ng-container>
 
@@ -51,5 +51,6 @@
                  (page)="getData($event)"
                  [pageSize]="10"
                  [pageSizeOptions]="[10,20,50]"
-                 showFirstLastButtons="true"></mat-paginator>
+                 showFirstLastButtons="true">
+  </mat-paginator>
 </div>

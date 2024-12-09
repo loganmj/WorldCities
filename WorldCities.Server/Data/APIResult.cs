@@ -99,8 +99,13 @@ namespace WorldCities.Server.Data
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NotSupportedException"></exception>
         /// <returns></returns>
-        private static bool IsValidProperty(string propertyName)
+        private static bool IsValidProperty(string? propertyName)
         {
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new ArgumentNullException(nameof(propertyName), "Property name cannot be null or empty.");
+            }
+
             return typeof(T).GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) == null
                 ? throw new NotSupportedException($"Property: '{propertyName}' does not exist.")
                 : true;
@@ -121,13 +126,17 @@ namespace WorldCities.Server.Data
         {
             // Gets the total number of elements in the source
             var count = await source.CountAsync();
+            var formattedSortColumn = "";
+            var formattedSortOrder = "";
 
             // Check for sort data
-            if (!string.IsNullOrEmpty(sortColumn) && IsValidProperty(sortColumn))
+            if (IsValidProperty(sortColumn))
             {
+                formattedSortColumn = sortColumn;
+
                 // Format sort order to either sort ascending or sort descending.
                 // Sort ascending by default.
-                sortOrder = string.Equals(sortOrder, SORT_DESCENDING, StringComparison.OrdinalIgnoreCase) ? SORT_DESCENDING : SORT_ASCENDING;
+                formattedSortOrder = string.Equals(sortOrder, SORT_DESCENDING, StringComparison.OrdinalIgnoreCase) ? SORT_DESCENDING : SORT_ASCENDING;
 
                 // Order the source
                 source = source.OrderBy($"{sortColumn} {sortOrder}");
@@ -137,7 +146,7 @@ namespace WorldCities.Server.Data
             source = source.Skip(pageIndex * pageSize).Take(pageSize);
 
             // Return the paginated results, and additional data
-            return new APIResult<T>(await source.ToListAsync(), count, pageIndex, pageSize);
+            return new APIResult<T>(await source.ToListAsync(), count, pageIndex, pageSize, formattedSortColumn, formattedSortOrder);
         }
 
         #endregion

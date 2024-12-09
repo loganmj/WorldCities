@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
 import { City } from './city';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 /**
  * A component for City data objects.
@@ -21,7 +21,7 @@ export class CitiesComponent implements OnInit {
 
   private readonly DEFAULT_PAGE_INDEX: number = 0;
   private readonly DEFAULT_PAGE_SIZE: number = 10;
-  private readonly DEFAULT_SORT_COLUMN: string = "name";
+  private readonly DEFAULT_SORT_COLUMN: string = "Name";
   private readonly DEFAULT_SORT_ORDER: "asc" | "desc" = "asc";
 
   // #endregion
@@ -59,7 +59,7 @@ export class CitiesComponent implements OnInit {
    * tells TypeScript that this property will be assigned a value before it is used,
    * even though that cannot be confirmed at compile time.
    */
-  public cities!: MatTableDataSource<City>;
+  public cities = new MatTableDataSource<City>();
 
   /**
    * A reference to the paginator in the DOM.
@@ -79,7 +79,7 @@ export class CitiesComponent implements OnInit {
    * Constructs a component with a given http client object.
    * The shorthand in the parameter creates a private HttpClient field
    * that is accessable by the rest of the class.
-   */ 
+   */
   constructor(private http: HttpClient) { }
 
   // #endregion
@@ -87,9 +87,12 @@ export class CitiesComponent implements OnInit {
   // #region Public Methods
 
   /**
-   * A lifecycle hook that gets called when the component is initialized.
+   * Lifecycle hook that gets called when the component is initialized.
    */ 
-  public ngOnInit(): void {
+  public ngOnInit(): void
+  {
+    this.cities.sort = this.sort;
+    this.cities.paginator = this.paginator;
     this.loadData();
   }
 
@@ -111,12 +114,22 @@ export class CitiesComponent implements OnInit {
   {
     var url = environment.baseUrl + 'api/Cities';
 
+    // Check sort values
+    const sortColumn = this.sort && this.sort.active ? this.sort.active : this.SortColumn;
+    const sortOrder = this.sort && this.sort.direction ? this.sort.direction : this.SortOrder;
+
     // Get page index and page size from the url parameters.
     var params = new HttpParams()
       .set("pageIndex", event.pageIndex.toString())
       .set("pageSize", event.pageSize.toString())
-      .set("sortColumn", (this.sort) ? this.sort.active : this.SortColumn)
-      .set("sortOrder", (this.sort) ? this.sort.direction : this.SortOrder);
+      .set("sortColumn", sortColumn)
+      .set("sortOrder", sortOrder);
+
+    // DEBUG
+    console.log('HttpParams PageIndex:', event.pageIndex);
+    console.log('HttpParams pageSize:', event.pageSize);
+    console.log('HttpParams Sort Active:', sortColumn);
+    console.log('HttpParams Sort Direction:', sortOrder);
 
     // Assume we are receiving our custom paginated data type from the API.
     // Retrieve the city data and the additional metadata from the return object.
@@ -126,8 +139,16 @@ export class CitiesComponent implements OnInit {
           this.paginator.length = result.totalCount;
           this.paginator.pageIndex = result.pageIndex;
           this.paginator.pageSize = result.pageSize;
-          this.cities = new MatTableDataSource<City>(result.data);
-          // this.cities.sort = this.sort;
+          this.cities.data = result.data;
+
+          // DEBUG
+          console.log('API result: ', result);
+          console.log('this.paginator: ', this.paginator);
+          console.log('Result Total Count: ', result.totalCount);
+          console.log('Paginator length: ', this.paginator.length);
+          console.log('Paginator total pages: ', this.paginator.getNumberOfPages());
+          console.log('Page Index:', result.pageIndex);
+          console.log('Page Size:', result.pageSize);
         },
         error: (error) => console.error(error)
       });
