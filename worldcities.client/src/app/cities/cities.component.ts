@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, viewChild } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { City } from './city';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
