@@ -1,0 +1,52 @@
+name: Build Solution
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build the Solution
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+        dotnet-version: [8.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+
+    - name: Install Angular CLI
+      run: npm install -g @angular/cli
+
+    - name: Install client dependencies
+      working-directory: worldcities.client
+      run: npm install
+
+    - name: Build Angular client
+      working-directory: worldcities.client
+      run: ng build --configuration production
+
+    - name: Restore .NET dependencies
+      working-directory: WorldCities.Server
+      run: dotnet restore
+
+    - name: Build .NET project
+      working-directory: WorldCities.Server
+      run: dotnet build --configuration Release --no-restore
