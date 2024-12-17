@@ -1,6 +1,1 @@
-@WorldCities2.Server_HostAddress = http://localhost:5052
-
-GET {{WorldCities2.Server_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
+@WorldCities2.Server_HostAddress = http://localhost:40433

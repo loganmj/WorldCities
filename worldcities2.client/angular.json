@@ -21,58 +21,59 @@
 			"sourceRoot": "src",
 			"prefix": "app",
 			"architect": {
-				"build": {
-					"builder": "@angular-devkit/build-angular:application",
-					"options": {
-						"outputPath": "dist/worldcities2.client",
-						"index": "src/index.html",
-						"browser": "src/main.ts",
-						"polyfills": [
-							"zone.js"
-						],
-						"tsConfig": "tsconfig.app.json",
-						"assets": [
-							{
-								"glob": "**/*",
-								"input": "public"
-							}
-						],
-						"styles": [
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production",
+          "options": {
+            "outputPath": "dist/worldcities2.client",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              },
+              "src/assets"
+            ],
+            "styles": [
               "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.scss"
             ],
-						"scripts": []
-					},
-					"configurations": {
-						"production": {
-							"budgets": [
-								{
-									"type": "initial",
-									"maximumWarning": "500kB",
-									"maximumError": "1MB"
-								},
-								{
-									"type": "anyComponentStyle",
-									"maximumWarning": "4kB",
-									"maximumError": "8kB"
-								}
-							],
-							"outputHashing": "all"
-						},
-						"development": {
-							"optimization": false,
-							"extractLicenses": false,
-							"sourceMap": true,
-							"fileReplacements": [
-								{
-									"replace": "src/environments/environment.ts",
-									"with": "src/environments/environment.development.ts"
-								}
-							]
-						}
-					},
-					"defaultConfiguration": "production"
-				},
+            "scripts": []
+          }
+        },
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
@@ -117,7 +118,7 @@
 			}
 		}
 	},
-	"cli": {
-		"analytics": "dbbbd7a7-660d-4dfa-a321-35c1d2866c28"
-	}
+  "cli": {
+    "analytics": "dbbbd7a7-660d-4dfa-a321-35c1d2866c28"
+  }
 }
