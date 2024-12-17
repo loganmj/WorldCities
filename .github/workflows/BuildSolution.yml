@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
-        dotnet-version: [8.x]
+        dotnet-version: [9.x]
 
     steps:
     - name: Checkout repository
