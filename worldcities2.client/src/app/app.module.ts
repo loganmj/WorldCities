@@ -4,14 +4,14 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeComponentComponent } from './home-component/home-component.component';
-import { NavMenuComponentComponent } from './nav-menu-component/nav-menu-component.component';
+import { NavMenuComponent } from './nav-menu/nav-menu.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponentComponent,
-    NavMenuComponentComponent
+    NavMenuComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,
