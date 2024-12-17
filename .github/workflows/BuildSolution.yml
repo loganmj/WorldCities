@@ -36,7 +36,7 @@ jobs:
       run: npm install -g @angular/cli
 
     - name: Install client dependencies
-      working-directory: worldcities.client
+      working-directory: worldcities2.client
       run: npm install
 
     - name: Build Angular client
@@ -44,9 +44,9 @@ jobs:
       run: ng build --configuration production
 
     - name: Restore .NET dependencies
-      working-directory: WorldCities.Server
+      working-directory: WorldCities2.Server
       run: dotnet restore
 
     - name: Build .NET project
-      working-directory: WorldCities.Server
+      working-directory: WorldCities2.Server
       run: dotnet build --configuration Release --no-restore
