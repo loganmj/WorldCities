@@ -40,7 +40,7 @@ jobs:
       run: npm install
 
     - name: Build Angular client
-      working-directory: worldcities.client
+      working-directory: worldcities2.client
       run: ng build --configuration production
 
     - name: Restore .NET dependencies
