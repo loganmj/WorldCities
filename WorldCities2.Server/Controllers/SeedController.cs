@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using System.Security;
-using WorldCities.Server.Data;
+using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
 
 namespace WorldCities.Server.Controllers
@@ -95,8 +95,8 @@ namespace WorldCities.Server.Controllers
                 var country = new Country
                 {
                     Name = countryName,
-                    IS02 = iso2,
-                    IS03 = iso3
+                    ISO2 = iso2,
+                    ISO3 = iso3
                 };
 
                 // Add the entity to the database context

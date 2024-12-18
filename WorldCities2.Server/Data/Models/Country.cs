@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WorldCities2.Server.Data.Models;
 
@@ -9,8 +10,8 @@ namespace WorldCities2.Server.Data.Models;
 /// </summary>
 [Table("Countries")]
 [Index(nameof(Name))]
-[Index(nameof(IS02))]
-[Index(nameof(IS03))]
+[Index(nameof(ISO2))]
+[Index(nameof(ISO3))]
 public class Country
 {
     #region Properties
@@ -30,12 +31,14 @@ public class Country
     /// <summary>
     /// The country code (in ISO 3166-1 ALPHA-2 format).
     /// </summary>
-    public required string IS02 { get; set; }
+    [JsonPropertyName("iso2")]
+    public required string ISO2 { get; set; }
 
     /// <summary>
     /// The country code (in ISO 3166-1 ALPHA-3 format).
     /// </summary>
-    public required string IS03 { get; set; }
+    [JsonPropertyName("iso3")]
+    public required string ISO3 { get; set; }
 
     /// <summary>
     /// A collection of all the cities related to this country.

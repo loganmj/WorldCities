@@ -22,9 +22,9 @@ namespace WorldCities2.Server.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    IS02 = table.Column<string>(type: "varchar(255)", nullable: false)
+                    ISO2 = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    IS03 = table.Column<string>(type: "varchar(255)", nullable: false)
+                    ISO3 = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -78,14 +78,14 @@ namespace WorldCities2.Server.Data.Migrations
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Countries_IS02",
+                name: "IX_Countries_ISO2",
                 table: "Countries",
-                column: "IS02");
+                column: "ISO2");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Countries_IS03",
+                name: "IX_Countries_ISO3",
                 table: "Countries",
-                column: "IS03");
+                column: "ISO3");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Countries_Name",

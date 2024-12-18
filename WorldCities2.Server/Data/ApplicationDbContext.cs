@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WorldCities2.Server.Data.Models;
 
-namespace WorldCities.Server.Data;
+namespace WorldCities2.Server.Data;
 
 /// <summary>
 /// Database context

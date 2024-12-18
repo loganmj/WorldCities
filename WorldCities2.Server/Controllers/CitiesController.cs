@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WorldCities.Server.Data;
+using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
 
 namespace WorldCities.Server.Controllers

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WorldCities.Server.Data;
+using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
 
-namespace WorldCities.Server.Controllers
+namespace WorldCities2.Server.Controllers
 {
     /// <summary>
     /// An entity controller for Country data.
@@ -48,13 +48,24 @@ namespace WorldCities.Server.Controllers
         #region Public Methods
 
         /// <summary>
-        /// Gets a list of all the country objects.
+        /// Gets a list of countries from the database.
+        /// Allows for server-side pagination.
         /// </summary>
-        /// <returns>Returns an IEnumerable JSON array containing all of the countires in the database.</returns>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns>Returns an IEnumerable JSON array containing all of the cities in the database.</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+        public async Task<ActionResult<APIResult<Country>>> GetCountries(int pageIndex = 0, int pageSize = 10, string? sortColumn = null, string? sortOrder = null)
         {
-            return await _context.Countries.ToListAsync();
+            try
+            {
+                return await APIResult<Country>.CreateAsync(_context.Countries.AsNoTracking(), pageIndex, pageSize, sortColumn, sortOrder);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         /// <summary>

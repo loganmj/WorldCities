@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WorldCities.Server.Data;
+using WorldCities2.Server.Data;
 
 #nullable disable
 
@@ -63,13 +63,15 @@ namespace WorldCities2.Server.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("IS02")
+                    b.Property<string>("ISO2")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .HasAnnotation("Relational:JsonPropertyName", "iso2");
 
-                    b.Property<string>("IS03")
+                    b.Property<string>("ISO3")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .HasAnnotation("Relational:JsonPropertyName", "iso3");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -77,9 +79,9 @@ namespace WorldCities2.Server.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IS02");
+                    b.HasIndex("ISO2");
 
-                    b.HasIndex("IS03");
+                    b.HasIndex("ISO3");
 
                     b.HasIndex("Name");
 

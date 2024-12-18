@@ -2,7 +2,7 @@
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 
-namespace WorldCities.Server.Data
+namespace WorldCities2.Server.Data
 {
     /// <summary>
     /// A custom API result class that allows us to return additional information about our dataset.
