@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using WorldCities.Server.Data;
+
+// Use non-commercial version of EPPlus
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 var builder = WebApplication.CreateBuilder(args);
 
