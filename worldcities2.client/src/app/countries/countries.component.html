@@ -1,0 +1,56 @@
+<h1>Countries</h1>
+
+<p>Here's a list of countries:</p>
+
+<p *ngIf="!countries"><em>Loading ...</em></p>
+
+<!-- Angular Materials table -->
+<div class="countries-table-container mat-elevation-z8">
+  <mat-table #table
+             [dataSource]="countries"
+             [hidden]="!countries"
+             matSort
+             (matSortChange)="onSortChange($event)">
+
+    <!-- Header row -->
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+    <!-- Data rows -->
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    <!-- ID column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+      <mat-cell *matCellDef="let country">{{country.id}}</mat-cell>
+    </ng-container>
+
+    <!-- Name column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+      <mat-cell *matCellDef="let country">{{country.name}}</mat-cell>
+    </ng-container>
+
+    <!-- ISO2 column -->
+    <ng-container matColumnDef="is02">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>IS02</mat-header-cell>
+      <mat-cell *matCellDef="let country">{{country.is02}}</mat-cell>
+    </ng-container>
+
+    <!-- ISO3 column -->
+    <ng-container matColumnDef="is03">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>IS03</mat-header-cell>
+      <mat-cell *matCellDef="let country">{{country.is03}}</mat-cell>
+    </ng-container>
+
+  </mat-table>
+
+  <!-- Add pagination -->
+  <mat-paginator #paginator
+                 class="countries-table-paginator"
+                 [hidden]="!countries"
+                 (page)="getData($event)"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[10,20,50]"
+                 showFirstLastButtons="true">
+  </mat-paginator>
+</div>
