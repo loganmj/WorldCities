@@ -26,12 +26,12 @@ public class ApplicationDbContext : DbContext
     #region Public Methods
 
     /// <summary>
-    /// Accessor for a City object.
+    /// Represents the Cities database table.
     /// </summary>
     public DbSet<City> Cities => Set<City>();
 
     /// <summary>
-    /// Accessor for a Country object.
+    /// Represents the Countries database table.
     /// </summary>
     public DbSet<Country> Countries => Set<Country>();
 

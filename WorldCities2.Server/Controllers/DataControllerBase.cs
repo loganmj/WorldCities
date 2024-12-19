@@ -1,37 +1,59 @@
-﻿namespace WorldCities2.Server.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WorldCities2.Server.Data;
+
+namespace WorldCities2.Server.Controllers
 {
     /// <summary>
     /// TODO: Create an abstract base class for data controllers so we don't have to repeat a bunch of code.
     /// </summary>
-    public class DataControllerBase
+    public class DataControllerBase<T> : ControllerBase where T: class
     {
-        /* Rough sketch of base code
-         
-        public class BaseController<T> : Controller where T : class
-{
-    protected readonly DbContext _context;
+        #region Fields
 
-    public BaseController(DbContext context)
-    {
-        _context = context;
-    }
+        protected ApplicationDbContext _context;
 
-    [HttpGet]
-    public async Task<ActionResult<APIResult<T>>> GetItems(int pageIndex = 0, int pageSize = 10, string? sortColumn = null, string? sortOrder = null)
-    {
-        try
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Constructs a controller with an injected database context.
+        /// </summary>
+        /// <param name="context"></param>
+        public DataControllerBase( ApplicationDbContext context)
         {
-            return await APIResult<T>.CreateAsync(_context.Set<T>().AsNoTracking(), pageIndex, pageSize, sortColumn, sortOrder);
+            _context = context;
         }
-        catch (Exception ex)
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Gets all object data.
+        /// Allows for sorting, filtering, and pagination.
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="sortColumn"></param>
+        /// <param name="sortOrder"></param>
+        /// <returns>Returns an APIResult containing the result data.</returns>
+        [HttpGet]
+        public async Task<ActionResult<APIResult<T>>> GetItems(int pageIndex = 0, int pageSize = 10, string? sortColumn = null, string? sortOrder = null)
         {
-            Console.WriteLine($"Error: {ex.Message}");
-            return StatusCode(500, "Internal server error");
+            try
+            {
+                return await APIResult<T>.CreateAsync(_context.Set<T>().AsNoTracking(), pageIndex, pageSize, sortColumn, sortOrder);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
         }
-    }
-}
-         
-         */
+
+        #endregion
 
         /* Rouch sketch of inhereting code
          

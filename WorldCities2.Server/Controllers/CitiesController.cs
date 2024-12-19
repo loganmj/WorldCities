@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WorldCities2.Server.Controllers;
 using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
 
@@ -10,21 +11,15 @@ namespace WorldCities.Server.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class CitiesController : ControllerBase
+    public class CitiesController : DataControllerBase<City>
     {
-        #region Fields
-
-        private readonly ApplicationDbContext _context;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
         /// Constructs a controller with the specified database context.
         /// </summary>
         /// <param name="context"></param>
-        public CitiesController(ApplicationDbContext context)
+        public CitiesController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
@@ -46,30 +41,6 @@ namespace WorldCities.Server.Controllers
         #endregion
 
         #region Public Methods
-
-        /// <summary>
-        /// Gets a list of cities from the database.
-        /// Allows for server-side pagination.
-        /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns>Returns an IEnumerable JSON array containing all of the cities in the database.</returns>
-        [HttpGet]
-        public async Task<ActionResult<APIResult<City>>> GetCities(int pageIndex = 0, int pageSize = 10, string? sortColumn = null, string? sortOrder = null)
-        {
-            try
-            {
-                // DEBUG
-                Console.WriteLine($"pageIndex: {pageIndex}, pageSize: {pageSize}, sortColumn: {sortColumn}, sortOrder: {sortOrder}");
-
-                return await APIResult<City>.CreateAsync(_context.Cities.AsNoTracking(), pageIndex, pageSize, sortColumn, sortOrder);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
-        }
 
         /// <summary>
         /// Gets a city with the specified ID from the database.

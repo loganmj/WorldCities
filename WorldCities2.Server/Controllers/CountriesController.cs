@@ -10,21 +10,15 @@ namespace WorldCities2.Server.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class CountriesController : ControllerBase
+    public class CountriesController : DataControllerBase<Country>
     {
-        #region Fields
-
-        private readonly ApplicationDbContext _context;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
         /// Constructs a controller with the specified database context.
         /// </summary>
         /// <param name="context"></param>
-        public CountriesController(ApplicationDbContext context)
+        public CountriesController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
@@ -46,27 +40,6 @@ namespace WorldCities2.Server.Controllers
         #endregion
 
         #region Public Methods
-
-        /// <summary>
-        /// Gets a list of countries from the database.
-        /// Allows for server-side pagination.
-        /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns>Returns an IEnumerable JSON array containing all of the cities in the database.</returns>
-        [HttpGet]
-        public async Task<ActionResult<APIResult<Country>>> GetCountries(int pageIndex = 0, int pageSize = 10, string? sortColumn = null, string? sortOrder = null)
-        {
-            try
-            {
-                return await APIResult<Country>.CreateAsync(_context.Countries.AsNoTracking(), pageIndex, pageSize, sortColumn, sortOrder);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
-        }
 
         /// <summary>
         /// Gets a Country with the specified ID.
