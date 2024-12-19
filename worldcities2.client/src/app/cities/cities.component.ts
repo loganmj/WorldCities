@@ -146,8 +146,6 @@ export class CitiesComponent implements OnInit {
           this.paginator.pageIndex = result.pageIndex;
           this.paginator.pageSize = result.pageSize;
           this.cities.data = result.data
-
-          console.log('Total count ', result.totalCount);
         },
         error: (error) => console.error(error)
       });

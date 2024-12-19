@@ -23,6 +23,7 @@ export class CountriesComponent implements OnInit {
   private readonly DEFAULT_PAGE_SIZE: number = 10;
   private readonly DEFAULT_SORT_COLUMN: string = "Name";
   private readonly DEFAULT_SORT_ORDER: "asc" | "desc" = "asc";
+  private readonly DEFAULT_FILTER_COLUMN: string = "name";
 
   // #endregion
 
@@ -31,23 +32,28 @@ export class CountriesComponent implements OnInit {
   /**
    * The desired page index.
    */
-  public PageIndex: number = this.DEFAULT_PAGE_INDEX;
+  public pageIndex: number = this.DEFAULT_PAGE_INDEX;
 
   /**
    * The desired page size.
    */
-  public PageSize: number = this.DEFAULT_PAGE_SIZE;
+  public pageSize: number = this.DEFAULT_PAGE_SIZE;
 
   /**
    * The name of the data column to sort by.
    */
-  public SortColumn: string = this.DEFAULT_SORT_COLUMN;
+  public sortColumn: string = this.DEFAULT_SORT_COLUMN;
 
   /**
    * The direction to sort by (ascending or descending). 
    * Can have a value of "ASC" or "DESC"
    */
-  public SortOrder: "asc" | "desc" = this.DEFAULT_SORT_ORDER;
+  public sortOrder: "asc" | "desc" = this.DEFAULT_SORT_ORDER;
+
+  /**
+ * The query string for a data filter.
+ */
+  public filterQuery?: string;
 
   /**
    * The columns to display in the data table.
@@ -98,11 +104,12 @@ export class CountriesComponent implements OnInit {
   /**
    * Populates the data.
    */
-  public loadData(): void {
+  public loadData(query?: string): void {
 
     var pageEvent = new PageEvent();
-    pageEvent.pageIndex = this.PageIndex;
-    pageEvent.pageSize = this.PageSize;
+    pageEvent.pageIndex = this.pageIndex;
+    pageEvent.pageSize = this.pageSize;
+    this.filterQuery = query;
     this.getData(pageEvent);
   }
 
@@ -113,8 +120,8 @@ export class CountriesComponent implements OnInit {
     var url = environment.baseUrl + 'api/Countries';
 
     // Check sort values
-    const sortColumn = this.sort && this.sort.active ? this.sort.active : this.SortColumn;
-    const sortOrder = this.sort && this.sort.direction ? this.sort.direction : this.SortOrder;
+    const sortColumn = this.sort && this.sort.active ? this.sort.active : this.sortColumn;
+    const sortOrder = this.sort && this.sort.direction ? this.sort.direction : this.sortOrder;
 
     // Get page index and page size from the url parameters.
     var params = new HttpParams()
@@ -122,6 +129,13 @@ export class CountriesComponent implements OnInit {
       .set("pageSize", event.pageSize.toString())
       .set("sortColumn", sortColumn)
       .set("sortOrder", sortOrder);
+
+    // Apply filter
+    if (this.filterQuery) {
+      params = params
+        .set("filterColumn", this.DEFAULT_FILTER_COLUMN)
+        .set("filterQuery", this.filterQuery);
+    }
 
     // Assume we are receiving our custom paginated data type from the API.
     // Retrieve the country data and the additional metadata from the return object.
@@ -132,10 +146,6 @@ export class CountriesComponent implements OnInit {
           this.paginator.pageIndex = result.pageIndex;
           this.paginator.pageSize = result.pageSize;
           this.countries.data = result.data;
-
-          // DEBUG
-          console.log('API result: ', result);
-          console.log('Countries data: ', this.countries.data);
         },
         error: (error) => console.error(error)
       });
