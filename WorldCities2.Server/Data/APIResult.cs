@@ -153,9 +153,6 @@ namespace WorldCities2.Server.Data
                                                            string? filterColumn = null,
                                                            string? filterQuery = null)
         {
-            // Gets the total number of elements in the source
-            var count = await source.CountAsync();
-
             // Check for filter data 
             if (!string.IsNullOrEmpty(filterColumn)&& !string.IsNullOrEmpty(filterQuery) && IsValidProperty(filterColumn)) 
             {
@@ -177,6 +174,9 @@ namespace WorldCities2.Server.Data
                 // Order the source
                 source = source.OrderBy($"{sortColumn} {sortOrder}");
             }
+
+            // Gets the total number of elements in the source
+            var count = await source.CountAsync();
 
             // Take only the paginated data
             source = source.Skip(pageIndex * pageSize).Take(pageSize);

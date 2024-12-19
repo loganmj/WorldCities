@@ -6,11 +6,17 @@
 
 <!-- Angular Materials table -->
 <div class="cities-table-container mat-elevation-z8">
+
+  <!-- Filter form -->
+  <!-- For now, this just filters data by name. -->
+  <mat-form-field [hidden]="!cities">
+    <input matInput #filter (keyup)="loadData(filter.value)" placeholder="Filter by name (or part of it) ...">
+  </mat-form-field>
+
   <mat-table #table
              [dataSource]="cities"
              [hidden]="!cities"
-             matSort
-             (matSortChange)="onSortChange($event)">
+             matSort (matSortChange)="loadData(filter.value)">
 
     <!-- Header row -->
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
