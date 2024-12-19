@@ -63,6 +63,16 @@ namespace WorldCities2.Server.Data
         /// </summary>
         public string? SortOrder { get; private set; }
 
+        /// <summary>
+        /// Filter column name.
+        /// </summary>
+        public string? FilterColumn { get; private set; }
+
+        /// <summary>
+        /// Filter query string.
+        /// </summary>
+        public string? FilterQuery { get; private set; }
+
         #endregion
 
         #region Constructors
@@ -76,7 +86,14 @@ namespace WorldCities2.Server.Data
         /// <param name="pageSize"></param>
         /// <param name="sortColumn"></param>
         /// <param name="sortOrder"></param>
-        private APIResult(List<T> data, int count, int pageIndex, int pageSize, string? sortColumn = null, string? sortOrder = null)
+        private APIResult(List<T> data,
+                          int count,
+                          int pageIndex,
+                          int pageSize,
+                          string? sortColumn = null,
+                          string? sortOrder = null,
+                          string? filterColumn = null,
+                          string? filterQuery = null)
         {
             Data = data;
             PageIndex = pageIndex;
@@ -85,6 +102,8 @@ namespace WorldCities2.Server.Data
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
             SortColumn = sortColumn;
             SortOrder = sortOrder;
+            FilterColumn = filterColumn;
+            FilterQuery = filterQuery;
         }
 
         #endregion
@@ -116,20 +135,37 @@ namespace WorldCities2.Server.Data
         #region Public Methods
 
         /// <summary>
-        /// Pages an IQueryable source.
+        /// Pages, sorts, and/or filters an IQueryable source.
         /// </summary>
         /// <param name="source">An IQueryable source of generic type T.</param>
         /// <param name="pageIndex">The current page index.</param>
         /// <param name="pageSize">The size of each page.</param>
+        /// <param name="sortColumn">The sorting column name.</param>
+        /// <param name="sortOrder">The sorting order ("ASC" or "DESC").</param>
+        /// <param name="filterColumn">The filtering column name.</param>
+        /// <param name="filterQuery">The filtering query (value to lookup).</param>
         /// <returns> An APIResult object containing the paged result and all of the relevant paging navigation information.</returns>
-        public static async Task<APIResult<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize, string? sortColumn = null, string? sortOrder = null)
+        public static async Task<APIResult<T>> CreateAsync(IQueryable<T> source,
+                                                           int pageIndex,
+                                                           int pageSize,
+                                                           string? sortColumn = null,
+                                                           string? sortOrder = null,
+                                                           string? filterColumn = null,
+                                                           string? filterQuery = null)
         {
             // Gets the total number of elements in the source
             var count = await source.CountAsync();
+
+            // Check for filter data 
+            if (!string.IsNullOrEmpty(filterColumn)&& !string.IsNullOrEmpty(filterQuery) && IsValidProperty(filterColumn)) 
+            {
+                source = source.Where($"{filterColumn}.StartsWith(@0)", filterQuery);
+            }
+
+            // Check for sort data
             var formattedSortColumn = "";
             var formattedSortOrder = "";
 
-            // Check for sort data
             if (IsValidProperty(sortColumn))
             {
                 formattedSortColumn = sortColumn;
@@ -146,7 +182,14 @@ namespace WorldCities2.Server.Data
             source = source.Skip(pageIndex * pageSize).Take(pageSize);
 
             // Return the paginated results, and additional data
-            return new APIResult<T>(await source.ToListAsync(), count, pageIndex, pageSize, formattedSortColumn, formattedSortOrder);
+            return new APIResult<T>(await source.ToListAsync(),
+                                    count,
+                                    pageIndex,
+                                    pageSize,
+                                    formattedSortColumn,
+                                    formattedSortOrder,
+                                    filterColumn,
+                                    filterQuery);
         }
 
         #endregion
