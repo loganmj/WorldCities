@@ -2,7 +2,11 @@
 
 <p>Here's a list of cities:</p>
 
+<!-- Loading message -->
 <p *ngIf="!cities"><em>Loading ...</em></p>
+
+<!-- Add City button -->
+<button mat-flat-button color="primary" class="btn-add" *ngIf="cities" [routerLink]="['/city']">Add City</button>
 
 <!-- Angular Materials table -->
 <div class="cities-table-container mat-elevation-z8">
