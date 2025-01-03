@@ -137,17 +137,12 @@ namespace WorldCities.Server.Controllers
         [Route("IsDuplicateCity")]
         public bool IsDuplicateCity(City city) 
         {
-            Console.WriteLine($"Checking if duplicate exists of city {city.Name}, {city.Latitude}, {city.Longitude}, {city.CountryId} ...");
-
-            var result = _context.Cities.AsNoTracking()
+            return _context.Cities.AsNoTracking()
                                   .Any(x => x.Name == city.Name
                                             && x.Latitude == city.Latitude
                                             && x.Longitude == city.Longitude
                                             && x.CountryId == city.CountryId
                                             && x.ID != city.ID);
-
-            Console.WriteLine($"City is duplicate: {result}");
-            return result;
         }
 
         #endregion
