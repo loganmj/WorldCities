@@ -7,6 +7,13 @@
   <!-- City Edit form -->
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
+    <!-- Error message -->
+    <p>
+      <mat-error *ngIf="form.invalid && form.hasError('isDuplicateCity')">
+        <strong>ERROR</strong>:A city with the same <i>name</i>, <i>latitude</i>, <i>longitude</i> and <i>country</i> already exists.
+      </mat-error>
+    </p>
+
     <!-- Name -->
     <mat-form-field>
       <mat-label>Name:</mat-label>

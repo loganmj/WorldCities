@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators } from '@angular/forms';
 import { City } from './city';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { Country } from '../countries/country';
+import { map, Observable } from 'rxjs';
 
 /**
  * A component that allows the user to edit a city.
@@ -60,6 +61,31 @@ export class CityEditComponent implements OnInit {
   // #region Public Methods
 
   /**
+   * Checks if the city is a duplicate.
+   */ 
+  isDuplicateCity(): AsyncValidatorFn {
+
+    // Return a function that takes a control as an argument.
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+
+      // Create a new city object
+      var city = <City>{};
+      city.id = (this.id) ? this.id : 0;
+      city.name = this.form.controls['name'].value;
+      city.latitude = +this.form.controls['latitude'].value;
+      city.longitude = +this.form.controls['longitude'].value;
+      city.countryID = +this.form.controls['countryId'].value;
+
+      // Call the server to check if the city is a duplicate
+      var url = `${environment.baseUrl}api/cities/IsDuplicateCity`;
+      return this.http.post<boolean>(url, city)
+        .pipe(map(result => {
+          return (result ? { isDuplicateCity: true } : null);
+        }));
+    };
+  }
+
+  /**
    * Called when the component is initialized.
    */
   public ngOnInit(): void {
@@ -68,7 +94,7 @@ export class CityEditComponent implements OnInit {
       latitude: new FormControl('', Validators.required),
       longitude: new FormControl('', Validators.required),
       countryId: new FormControl('', Validators.required)
-    });
+    }, null, this.isDuplicateCity());
 
     this.loadData();
   }
