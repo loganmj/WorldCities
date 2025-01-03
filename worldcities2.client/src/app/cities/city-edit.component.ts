@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { City } from './city';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -64,10 +64,10 @@ export class CityEditComponent implements OnInit {
    */
   public ngOnInit(): void {
     this.form = new FormGroup({
-      name: new FormControl(''),
-      latitude: new FormControl(''),
-      longitude: new FormControl(''),
-      countryId: new FormControl('')
+      name: new FormControl('', Validators.required),
+      latitude: new FormControl('', Validators.required),
+      longitude: new FormControl('', Validators.required),
+      countryId: new FormControl('', Validators.required)
     });
 
     this.loadData();
