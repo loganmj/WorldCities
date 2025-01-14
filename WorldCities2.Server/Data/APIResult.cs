@@ -108,17 +108,18 @@ namespace WorldCities2.Server.Data
 
         #endregion
 
-        #region Private Methods
+        #region Public Methods
 
         /// <summary>
         /// Checks if the given property name exists in the data.
         /// Helps protect against SQL injection.
         /// </summary>
         /// <param name="propertyName"></param>
+        /// <param name="throwExceptionIfNotFound"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NotSupportedException"></exception>
-        /// <returns></returns>
-        private static bool IsValidProperty(string? propertyName)
+        /// <returns>True, if the property name is a valid property of the given type. False, otherwise.</returns>
+        public static bool IsValidProperty(string? propertyName)
         {
             if (string.IsNullOrEmpty(propertyName))
             {
@@ -129,10 +130,6 @@ namespace WorldCities2.Server.Data
                 ? throw new NotSupportedException($"Property: '{propertyName}' does not exist.")
                 : true;
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Pages, sorts, and/or filters an IQueryable source.

@@ -137,6 +137,7 @@ namespace WorldCities.Server.Controllers
         [Route("IsDuplicateCity")]
         public bool IsDuplicateCity(City city) 
         {
+            // Return a city that has all of the matching fields
             return _context.Cities.AsNoTracking()
                                   .Any(x => x.Name == city.Name
                                             && x.Latitude == city.Latitude

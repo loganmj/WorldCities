@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
+using System.Linq.Dynamic.Core;
 
 namespace WorldCities2.Server.Controllers
 {
@@ -123,6 +124,19 @@ namespace WorldCities2.Server.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Checks a country to make sure that none of its fields
+        /// </summary>
+        /// <param name="country"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("IsDuplicateField")]
+        public bool IsDuplicateField(int countryId, string fieldName, string fieldValue) 
+        {
+            // Dynamic LINQ shenanigans
+            return (APIResult<Country>.IsValidProperty(fieldName)) && _context.Countries.Any($"{fieldName} == @0 && ID != @1", fieldValue, countryId);
         }
 
         #endregion
