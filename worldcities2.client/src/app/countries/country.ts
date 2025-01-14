@@ -4,6 +4,6 @@
 export interface Country {
   id: number;
   name: string;
-  is02: string;
-  is03: string;
+  iso2: string;
+  iso3: string;
 }
