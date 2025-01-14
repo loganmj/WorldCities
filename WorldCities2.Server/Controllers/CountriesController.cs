@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
 using System.Linq.Dynamic.Core;
+using WorldCities2.Server.Security;
 
 namespace WorldCities2.Server.Controllers
 {
@@ -135,8 +136,12 @@ namespace WorldCities2.Server.Controllers
         [Route("IsDuplicateField")]
         public bool IsDuplicateField(int countryId, string fieldName, string fieldValue) 
         {
+            // Sanitize the string inputs
+            var sanitizedFieldName = Sanitizer.SanitizeString(fieldName);
+            var sanitizedFieldValue = Sanitizer.SanitizeString(fieldValue);
+
             // Dynamic LINQ shenanigans
-            return (APIResult<Country>.IsValidProperty(fieldName)) && _context.Countries.Any($"{fieldName} == @0 && ID != @1", fieldValue, countryId);
+            return (APIResult<Country>.IsValidProperty(sanitizedFieldName)) && _context.Countries.Any($"{sanitizedFieldName} == @0 && ID != @1", sanitizedFieldValue, countryId);
         }
 
         #endregion

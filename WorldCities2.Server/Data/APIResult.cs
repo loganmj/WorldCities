@@ -2,6 +2,7 @@
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Web;
+using WorldCities2.Server.Security;
 
 namespace WorldCities2.Server.Data
 {
@@ -133,20 +134,6 @@ namespace WorldCities2.Server.Data
         }
 
         /// <summary>
-        /// Sanitizes a string value to remove potentially harmful characters.
-        /// This is check against injection style attacks.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static string? SanitizeString(string? value) 
-        {
-            Console.WriteLine($"Data value before sanitizing: {value}");
-            var sanitizedValue = HttpUtility.HtmlEncode(value);
-            Console.WriteLine($"Data value after sanitizing: {sanitizedValue}");
-            return sanitizedValue;
-        }
-
-        /// <summary>
         /// Sanitizes all string properties of a given data object.
         /// </summary>
         /// <param name="data"></param>
@@ -169,7 +156,7 @@ namespace WorldCities2.Server.Data
                 if (property.PropertyType == typeof(string)) 
                 {
                     Console.WriteLine($"Sanitizing {property.Name} property of {typeof(T)} object ...");
-                    property.SetValue(data, SanitizeString(property.GetValue(data) as string));
+                    property.SetValue(data, Sanitizer.SanitizeString(property.GetValue(data) as string));
                 }
             }
         }
