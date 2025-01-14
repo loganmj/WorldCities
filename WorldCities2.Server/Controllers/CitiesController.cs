@@ -137,6 +137,9 @@ namespace WorldCities.Server.Controllers
         [Route("IsDuplicateCity")]
         public bool IsDuplicateCity(City city) 
         {
+            // Sanitize the city object
+            APIResult<City>.SanitizeStringProperties(city);
+
             // Return a city that has all of the matching fields
             return _context.Cities.AsNoTracking()
                                   .Any(x => x.Name == city.Name

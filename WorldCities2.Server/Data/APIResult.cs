@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
+using System.Web;
 
 namespace WorldCities2.Server.Data
 {
@@ -129,6 +130,48 @@ namespace WorldCities2.Server.Data
             return typeof(T).GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) == null
                 ? throw new NotSupportedException($"Property: '{propertyName}' does not exist.")
                 : true;
+        }
+
+        /// <summary>
+        /// Sanitizes a string value to remove potentially harmful characters.
+        /// This is check against injection style attacks.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string? SanitizeString(string? value) 
+        {
+            Console.WriteLine($"Data value before sanitizing: {value}");
+            var sanitizedValue = HttpUtility.HtmlEncode(value);
+            Console.WriteLine($"Data value after sanitizing: {sanitizedValue}");
+            return sanitizedValue;
+        }
+
+        /// <summary>
+        /// Sanitizes all string properties of a given data object.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>Returns the same data object, but with any string parameters sanitized.</returns>
+        public static void SanitizeStringProperties(T? data) 
+        {
+            // Return if the object is null
+            if (data == null) 
+            {
+                Console.WriteLine($"Data object is null. Nothing to sanitize.");
+                return;
+            }
+
+            // Get all properties of the object
+            var properties = typeof(T).GetProperties();
+
+            // Sanitize each string property in the data object
+            foreach (var property in properties) 
+            {
+                if (property.PropertyType == typeof(string)) 
+                {
+                    Console.WriteLine($"Sanitizing {property.Name} property of {typeof(T)} object ...");
+                    property.SetValue(data, SanitizeString(property.GetValue(data) as string));
+                }
+            }
         }
 
         /// <summary>
