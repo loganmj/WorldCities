@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { City } from './city';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -54,11 +54,42 @@ export class CityEditComponent implements OnInit {
   /**
    * Initializes a new instance of the CityEditComponent class.
    */ 
-  public constructor(private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) { }
+  public constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) { }
 
   // #endregion
 
   // #region Public Methods
+
+  /**
+ * Called when the component is initialized.
+ */
+  public ngOnInit(): void {
+
+    // Build form
+
+    // /* New way
+
+    this.form = this.formBuilder.group({
+      name: ['', Validators.required],
+      latitude: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})$/)]],
+      longitude: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})$/)]],
+      countryId: ['', Validators.required]
+    }, { asyncValidators: this.isDuplicateCity() });
+
+    // */
+
+    /* Old way
+    this.form = new FormGroup({
+      name: new FormControl('', Validators.required),
+      latitude: new FormControl('', Validators.required),
+      longitude: new FormControl('', Validators.required),
+      countryId: new FormControl('', Validators.required)
+    }, null, this.isDuplicateCity());
+
+    */
+
+    this.loadData();
+  }
 
   /**
    * Checks if the city is a duplicate.
@@ -83,20 +114,6 @@ export class CityEditComponent implements OnInit {
           return (result ? { isDuplicateCity: true } : null);
         }));
     };
-  }
-
-  /**
-   * Called when the component is initialized.
-   */
-  public ngOnInit(): void {
-    this.form = new FormGroup({
-      name: new FormControl('', Validators.required),
-      latitude: new FormControl('', Validators.required),
-      longitude: new FormControl('', Validators.required),
-      countryId: new FormControl('', Validators.required)
-    }, null, this.isDuplicateCity());
-
-    this.loadData();
   }
 
   /**
@@ -205,23 +222,6 @@ export class CityEditComponent implements OnInit {
         },
         error: (error) => { console.error(error); }
       });
-
-    /*
-
-      var url = environment.baseUrl + `api/cities/${city.id}`;
-
-      this.http.put<City>(url, city).subscribe({
-        next: (result) => {
-          console.log(`City {{city!.id}} has been updated.`);
-
-          // Go back to cities view
-          this.router.navigate(['/cities']);
-        },
-        error: (error) => { console.error(error); }
-      });
-    }
-
-    */
   }
 
   // #endregion
