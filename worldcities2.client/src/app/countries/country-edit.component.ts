@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { BaseFormComponent } from '../base-form.component';
 
 /**
  * Provides a form for editing country data.
@@ -16,7 +17,7 @@ import { environment } from '../../environments/environment';
   templateUrl: './country-edit.component.html',
   styleUrl: './country-edit.component.scss'
 })
-export class CountryEditComponent implements OnInit {
+export class CountryEditComponent extends BaseFormComponent implements OnInit {
 
   // #region Properties
 
@@ -24,11 +25,6 @@ export class CountryEditComponent implements OnInit {
    * The view title.
    */ 
   public title?: string;
-
-  /**
-   * The form model.
-   */ 
-  public form!: FormGroup;
 
   /**
    * The country object to edit or create.
@@ -58,7 +54,9 @@ export class CountryEditComponent implements OnInit {
    * @param router
    * @param http
    */ 
-  public constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) { }
+  public constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) {
+      super();
+  }
 
   // #endregion
 
@@ -79,8 +77,6 @@ export class CountryEditComponent implements OnInit {
     // Load the country data
     this.loadData();
   }
-
-
 
   /**
    * Loads data from the database.

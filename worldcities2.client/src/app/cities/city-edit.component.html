@@ -18,23 +18,21 @@
     <mat-form-field>
       <mat-label>Name:</mat-label>
       <input matInput formControlName="name" required placeholder="Name">
-      <mat-error *ngIf="form.controls['name'].errors?.['required']">Name is required.</mat-error>
+      <mat-error *ngFor="let error of getErrors(form.get('name')!, 'Name')">{{error}}</mat-error>
     </mat-form-field>
 
     <!-- Latitude -->
     <mat-form-field>
       <mat-label>Latitude:</mat-label>
       <input matInput formControlName="latitude" required placeholder="Latitude">
-      <mat-error *ngIf="form.controls['latitude'].errors?.['required']">Latitude is required.</mat-error>
-      <mat-error *ngIf="form.controls['latitude'].errors?.['pattern']">Latitude must be expressed as a decimal number with at most four digits after the decimal</mat-error>
+      <mat-error *ngFor="let error of getErrors(form.get('latitude')!, 'Latitude')">{{error}}</mat-error>
     </mat-form-field>
 
     <!-- Longitude -->
     <mat-form-field>
       <mat-label>Longitude:</mat-label>
       <input matInput formControlName="longitude" required placeholder="Longitude">
-      <mat-error *ngIf="form.controls['longitude'].errors?.['required']">Longitude is required.</mat-error>
-      <mat-error *ngIf="form.controls['longitude'].errors?.['pattern']">Longitude must be expressed as a decimal number with at most four digits after the decimal</mat-error>
+      <mat-error *ngFor="let error of getErrors(form.get('longitude')!, 'Longitude')">{{error}}</mat-error>
     </mat-form-field>
 
     <!-- Countries -->

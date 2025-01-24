@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { Country } from '../countries/country';
 import { map, Observable } from 'rxjs';
+import { BaseFormComponent } from '../base-form.component';
 
 /**
  * A component that allows the user to edit a city.
@@ -16,7 +17,7 @@ import { map, Observable } from 'rxjs';
   templateUrl: './city-edit.component.html',
   styleUrl: './city-edit.component.scss'
 })
-export class CityEditComponent implements OnInit {
+export class CityEditComponent extends BaseFormComponent implements OnInit {
 
   // #region Properties
 
@@ -24,11 +25,6 @@ export class CityEditComponent implements OnInit {
    * The view title.
    */ 
   public title?: string;
-
-  /**
-   * A reference to the form model.
-   */ 
-  public form!: FormGroup;
 
   /**
    * The city being edited.
@@ -54,7 +50,9 @@ export class CityEditComponent implements OnInit {
   /**
    * Initializes a new instance of the CityEditComponent class.
    */ 
-  public constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) { }
+  public constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) {
+    super();
+  }
 
   // #endregion
 
@@ -75,18 +73,6 @@ export class CityEditComponent implements OnInit {
       longitude: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)]],
       countryId: ['', Validators.required]
     }, { asyncValidators: this.isDuplicateCity() });
-
-    // */
-
-    /* Old way
-    this.form = new FormGroup({
-      name: new FormControl('', Validators.required),
-      latitude: new FormControl('', Validators.required),
-      longitude: new FormControl('', Validators.required),
-      countryId: new FormControl('', Validators.required)
-    }, null, this.isDuplicateCity());
-
-    */
 
     this.loadData();
   }
