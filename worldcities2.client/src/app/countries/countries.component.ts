@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { debounce, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 /**
  * A component for Country data objects.
@@ -76,6 +77,12 @@ export class CountriesComponent implements OnInit {
    * A reference to the sort component in DOM.
    */
   @ViewChild(MatSort) sort!: MatSort;
+
+  /**
+   * An observable, async subject that emits a string value.
+   * Used to emit changes to the filter text.
+   */ 
+  public filterTextChanged: Subject<string> = new Subject<string>();
 
   // #endregion
 
@@ -152,13 +159,20 @@ export class CountriesComponent implements OnInit {
   }
 
   /**
-   * Event handler that updates the sort component and re-queries the data
-   * when the sort is changed.
-   */
-  onSortChange(sortState: Sort) {
-    this.sort.active = sortState.active;
-    this.sort.direction = sortState.direction;
-    this.loadData();
+   * Debounces the filter text change and emits the next value.
+   */ 
+  public onFilterTextChanged(filterText: string) {
+
+    // Lazily subscribe to the filter text changed subject
+    // Add pipe to debounce value
+    if (!this.filterTextChanged.observed) {
+      this.filterTextChanged
+        .pipe(debounceTime(1000), distinctUntilChanged())
+        .subscribe(query => { this.loadData(query); });
+    }
+
+    // Emit the next value
+    this.filterTextChanged.next(filterText);
   }
 
   // #endregion
