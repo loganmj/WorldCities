@@ -3,8 +3,9 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 /**
  * A component for City data objects.
@@ -77,6 +78,13 @@ export class CitiesComponent implements OnInit {
    */
   @ViewChild(MatSort) sort!: MatSort;
 
+  /**
+   * Subjects are an RxJS tool for handling async data streams.
+   * This property is a Subject object that emits string values.
+   * Used to handle changes to the filter text.
+   */
+  public filterTextChanged: Subject<string> = new Subject<string>();
+
   // #endregion
 
   // #region Constructors
@@ -88,6 +96,9 @@ export class CitiesComponent implements OnInit {
    */
   constructor(private http: HttpClient) { }
 
+  // #endregion
+
+  // #region Private Methods
   // #endregion
 
   // #region Public Methods
@@ -149,6 +160,24 @@ export class CitiesComponent implements OnInit {
         },
         error: (error) => console.error(error)
       });
+  }
+
+  /**
+   * Called when filter text is changed
+   */
+  public onFilterTextChanged(filterText: string) {
+
+    // Lazy subscription to the filter text subject.
+    // Done here, because if the filter is never used, we don't have to
+    // allocate resources subscribing to it.
+    if (!this.filterTextChanged.observed) {
+      this.filterTextChanged
+        .pipe(debounceTime(1000), distinctUntilChanged())
+        .subscribe(query => { this.loadData(query); });
+    }
+
+    // Emit the filter text value
+    this.filterTextChanged.next(filterText);
   }
 
   // #endregion
