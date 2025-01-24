@@ -69,8 +69,8 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
 
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      latitude: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)]],
-      longitude: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)]],
+      latitude: ['', [Validators.required, Validators.pattern(/^-?\d+(\.\d{1,4})?$/)]],
+      longitude: ['', [Validators.required, Validators.pattern(/^-?\d+(\.\d{1,4})?$/)]],
       countryId: ['', Validators.required]
     }, { asyncValidators: this.isDuplicateCity() });
 

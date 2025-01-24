@@ -28,10 +28,12 @@ export class BaseFormComponent {
 
   /**
    * Parses errors and return appropriate error messages.
+   * Allows for passing in custom error messages.
    * @param control
-   * @param displayName 
+   * @param displayName
+   * @param [customMessages=null] 
    */
-  public getErrors(control: AbstractControl, displayName: string): string[] {
+  public getErrors(control: AbstractControl, displayName: string, customMessages: {[key: string] : string} | null = null): string[] {
 
     var errors: string[] = [];
 
@@ -39,13 +41,13 @@ export class BaseFormComponent {
     Object.keys(control.errors || {}).forEach((key) => {
       switch (key) {
         case 'required':
-          errors.push(`${displayName} is required.`);
+          errors.push(`${displayName} ${customMessages?.[key] ?? "is required"}.`);
           break;
         case 'pattern':
-          errors.push(`${displayName} contains invalid characters.`);
+          errors.push(`${displayName} ${customMessages?.[key] ?? "contains invalid characters"}.`);
           break;
         case 'isDuplicateField':
-          errors.push(`${displayName} already exists: please choose another.`);
+          errors.push(`${displayName} ${customMessages?.[key] ?? "already exists: please choose another"}.`);
           break;
         default:
           errors.push(`${displayName} is invalid.`);
