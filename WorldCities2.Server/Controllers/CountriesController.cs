@@ -12,7 +12,7 @@ namespace WorldCities2.Server.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class CountriesController : DataControllerBase<Country>
+    public class CountriesController : DataControllerBase<CountryDTO>
     {
         #region Constructors
 

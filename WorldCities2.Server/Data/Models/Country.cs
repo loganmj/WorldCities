@@ -30,12 +30,14 @@ public class Country
 
     /// <summary>
     /// The country code (in ISO 3166-1 ALPHA-2 format).
+    /// Setting the JSON property name manually to avoid automatic camel case issue.
     /// </summary>
     [JsonPropertyName("iso2")]
     public required string ISO2 { get; set; }
 
     /// <summary>
     /// The country code (in ISO 3166-1 ALPHA-3 format).
+    /// Setting the JSON property name manually to avoid automatic camel case issue.
     /// </summary>
     [JsonPropertyName("iso3")]
     public required string ISO3 { get; set; }

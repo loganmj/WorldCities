@@ -13,28 +13,18 @@ namespace WorldCities.Server.Controllers
     /// My best guess is that it has something to do with type conversion when reading in the latitude and longitude
     /// decomal values from the Excel sheet.
     /// </summary>
+    /// <remarks>
+    /// Constructs a controller with a give DB context.
+    /// </remarks>
+    /// <param name="context"></param>
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class SeedController : ControllerBase
+    public class SeedController(ApplicationDbContext context, IWebHostEnvironment environment) : ControllerBase
     {
         #region Fields
 
-        private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _environment;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Constructs a controller with a give DB context.
-        /// </summary>
-        /// <param name="context"></param>
-        public SeedController(ApplicationDbContext context, IWebHostEnvironment environment)
-        {
-            _context = context;
-            _environment = environment;
-        }
+        private readonly ApplicationDbContext _context = context;
+        private readonly IWebHostEnvironment _environment = environment;
 
         #endregion
 

@@ -7,24 +7,15 @@ namespace WorldCities2.Server.Controllers
     /// <summary>
     /// TODO: Create an abstract base class for data controllers so we don't have to repeat a bunch of code.
     /// </summary>
-    public class DataControllerBase<T> : ControllerBase where T: class
+    /// <remarks>
+    /// Constructs a controller with an injected database context.
+    /// </remarks>
+    /// <param name="context"></param>
+    public abstract class DataControllerBase<T>(ApplicationDbContext context) : ControllerBase where T : class
     {
         #region Fields
 
-        protected ApplicationDbContext _context;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Constructs a controller with an injected database context.
-        /// </summary>
-        /// <param name="context"></param>
-        public DataControllerBase( ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        protected ApplicationDbContext _context = context;
 
         #endregion
 
@@ -51,13 +42,14 @@ namespace WorldCities2.Server.Controllers
         {
             try
             {
-                return await APIResult<T>.CreateAsync(_context.Set<T>().AsNoTracking(),
-                                                      pageIndex,
-                                                      pageSize,
-                                                      sortColumn,
-                                                      sortOrder,
-                                                      filterColumn,
-                                                      filterQuery);
+                return await APIResult<T>.CreateAsync(
+                    _context.Set<T>().AsNoTracking(),
+                    pageIndex,
+                    pageSize,
+                    sortColumn,
+                    sortOrder,
+                    filterColumn,
+                    filterQuery);
             }
             catch (Exception ex)
             {
