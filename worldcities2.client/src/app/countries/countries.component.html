@@ -52,6 +52,12 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>ISO3</th>
         <td mat-cell *matCellDef="let country">{{country.iso3}}</td>
       </ng-container>
+
+      <!-- Name column -->
+      <ng-container matColumnDef="numberOfCities">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Number Of Cities</th>
+        <td mat-cell *matCellDef="let country">{{country.numberOfCities}}</td>
+      </ng-container>
     </tr>
   </table>
 

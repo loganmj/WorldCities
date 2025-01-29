@@ -59,7 +59,7 @@ export class CountriesComponent implements OnInit {
   /**
    * The columns to display in the data table.
    */
-  public displayedColumns: string[] = ['id', 'name', 'iso2', 'iso3'];
+  public displayedColumns: string[] = ['id', 'name', 'iso2', 'iso3', 'numberOfCities'];
 
   /**
    * The '!' character (definite assignment assertion operator)
