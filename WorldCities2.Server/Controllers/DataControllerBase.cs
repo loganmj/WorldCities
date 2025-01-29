@@ -33,7 +33,7 @@ namespace WorldCities2.Server.Controllers
         /// <param name="filterQuery"></param>
         /// <returns>Returns an APIResult containing the result data.</returns>
         [HttpGet]
-        public async Task<ActionResult<APIResult<T>>> GetItems(int pageIndex = 0,
+        public virtual async Task<ActionResult<APIResult<T>>> GetItems(int pageIndex = 0,
                                                                int pageSize = 10,
                                                                string? sortColumn = null,
                                                                string? sortOrder = null,

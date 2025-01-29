@@ -11,21 +11,8 @@ namespace WorldCities.Server.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class CitiesController : DataControllerBase<City>
+    public class CitiesController(ApplicationDbContext context) : DataControllerBase<City>(context)
     {
-        #region Constructors
-
-        /// <summary>
-        /// Constructs a controller with the specified database context.
-        /// </summary>
-        /// <param name="context"></param>
-        public CitiesController(ApplicationDbContext context) : base(context)
-        {
-            _context = context;
-        }
-
-        #endregion
-
         #region Private Methods
 
         /// <summary>
