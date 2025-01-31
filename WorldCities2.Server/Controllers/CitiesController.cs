@@ -64,7 +64,7 @@ namespace WorldCities.Server.Controllers
                         Latitude = city.Latitude,
                         Longitude = city.Longitude,
                         CountryId = city.CountryId,
-                        Country = city.Country!.Name
+                        Country = city.Country == null ? "--" : city.Country.Name
                     }),
                     pageIndex,
                     pageSize,

@@ -6,6 +6,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { CityService } from './city.service';
 
 /**
  * A component for City data objects.
@@ -22,7 +23,7 @@ export class CitiesComponent implements OnInit {
 
   private readonly DEFAULT_PAGE_INDEX: number = 0;
   private readonly DEFAULT_PAGE_SIZE: number = 10;
-  private readonly DEFAULT_SORT_COLUMN: string = "Name";
+  private readonly DEFAULT_SORT_COLUMN: string = "name";
   private readonly DEFAULT_SORT_ORDER: "asc" | "desc" = "asc";
   private readonly DEFAULT_FILTER_COLUMN: string = "name";
 
@@ -31,25 +32,9 @@ export class CitiesComponent implements OnInit {
   // #region Properties
 
   /**
-   * The desired page index.
-   */
-  public pageIndex: number = this.DEFAULT_PAGE_INDEX;
-
-  /**
-   * The desired page size.
-   */
-  public pageSize: number = this.DEFAULT_PAGE_SIZE;
-
-  /**
-   * The name of the data column to sort by.
-   */
-  public sortColumn: string = this.DEFAULT_SORT_COLUMN;
-
-  /**
-   * The direction to sort by (ascending or descending). 
-   * Can have a value of "ASC" or "DESC"
-   */
-  public sortOrder: "asc" | "desc" = this.DEFAULT_SORT_ORDER;
+   * The name of the column to filter by.
+   */ 
+  public filterColumn?: string;
 
   /**
    * The query string for a data filter.
@@ -94,7 +79,7 @@ export class CitiesComponent implements OnInit {
    * The shorthand in the parameter creates a private HttpClient field
    * that is accessable by the rest of the class.
    */
-  constructor(private http: HttpClient) { }
+  constructor(private cityService: CityService) { }
 
   // #endregion
 
@@ -113,57 +98,48 @@ export class CitiesComponent implements OnInit {
   }
 
   /**
-   * Populates the data.
+   * Populates the data, setting the page parameters to default.
+   * Allows the user to pass in a filter query.
+   * @param filterQuery 
    */
-  public loadData(query?: string): void {
+  public loadData(filterQuery?: string): void {
 
     var pageEvent = new PageEvent();
-    pageEvent.pageIndex = this.pageIndex;
-    pageEvent.pageSize = this.pageSize;
-    this.filterQuery = query;
+    pageEvent.pageIndex = this.DEFAULT_PAGE_INDEX;
+    pageEvent.pageSize = this.DEFAULT_PAGE_SIZE;
+    this.filterQuery = filterQuery;
     this.getData(pageEvent);
   }
 
   /**
-   * Retrieves paginated City data from the API.
+   * Retrieves City data from the API.
+   * Takes a page event as a parameter, allowing for pagination of the data.
+   * @param event
    */
   public getData(event: PageEvent) {
-    var url = environment.baseUrl + 'api/Cities';
 
-    // Check sort values
-    const sortColumn = this.sort && this.sort.active ? this.sort.active : this.sortColumn;
-    const sortOrder = this.sort && this.sort.direction ? this.sort.direction : this.sortOrder;
+    // Set parameters
+    var sortColumn = this.sort && this.sort.active ? this.sort.active : this.DEFAULT_SORT_COLUMN;
+    var sortOrder = this.sort && this.sort.direction ? this.sort.direction : this.DEFAULT_SORT_ORDER;
+    var filterColumn = this.DEFAULT_FILTER_COLUMN;
+    var filterQuery = (this.filterQuery) ? this.filterQuery : null;
 
-    // Get page index and page size from the url parameters.
-    var params = new HttpParams()
-      .set("pageIndex", event.pageIndex.toString())
-      .set("pageSize", event.pageSize.toString())
-      .set("sortColumn", sortColumn)
-      .set("sortOrder", sortOrder);
-
-    // Apply filter
-    if (this.filterQuery) {
-      params = params
-        .set("filterColumn", this.DEFAULT_FILTER_COLUMN)
-        .set("filterQuery", this.filterQuery);
-    }
-
-    // Assume we are receiving our custom paginated data type from the API.
-    // Retrieve the city data and the additional metadata from the return object.
-    this.http.get<any>(url, { params })
+    // Get data using the city data service
+    this.cityService.getData(event.pageIndex, event.pageSize, sortColumn, sortOrder, filterColumn, filterQuery)
       .subscribe({
         next: (result) => {
           this.paginator.length = result.totalCount;
           this.paginator.pageIndex = result.pageIndex;
           this.paginator.pageSize = result.pageSize;
-          this.cities.data = result.data
+          this.cities = new MatTableDataSource<City>(result.data);
         },
         error: (error) => console.error(error)
       });
   }
 
   /**
-   * Called when filter text is changed
+   * Called when filter text is changed.
+   * @param filterText 
    */
   public onFilterTextChanged(filterText: string) {
 
