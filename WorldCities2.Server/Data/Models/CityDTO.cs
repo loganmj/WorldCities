@@ -31,6 +31,12 @@ namespace WorldCities2.Server.Data.Models
         public decimal Longitude { get; set; }
 
         /// <summary>
+        /// The id of the associated country.
+        /// Used as a foreign key.
+        /// </summary>
+        public int CountryId { get; set; }
+
+        /// <summary>
         /// The name of the country in which the city resides.
         /// </summary>
         public string? Country { get; set; }
