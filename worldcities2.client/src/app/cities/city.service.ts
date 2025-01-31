@@ -4,6 +4,7 @@ import { City } from "./city";
 import { Observable } from "rxjs";
 import { ApiResult } from "../ApiResult";
 import { HttpParams } from "@angular/common/http";
+import { Country } from "../countries/country";
 
 /**
  * Data service class for City data.
@@ -65,6 +66,38 @@ export class CityService extends BaseDataService<City> {
    */
   public post(item: City): Observable<City> {
     return this.http.post<City>(this.getUrl(`api/Cities`), item);
+  }
+
+  /**
+   * Gets all countries from the API.
+   */ 
+  public getCountries(pageIndex: number, pageSize: number, sortColumn: string, sortOrder: string, filterColumn: string | null, filterQuery: string | null): Observable<ApiResult<Country>> {
+
+    // Set URL
+    var url = this.getUrl("api/Countries");
+
+    // Set API result parameters
+    var params = new HttpParams()
+      .set("pageIndex", pageIndex.toString())
+      .set("pageSize", pageSize.toString())
+      .set("sortColumn", sortColumn)
+      .set("sortOrder", sortOrder);
+
+    if (filterColumn && filterQuery) {
+      params = params
+        .set("filterColumn", filterColumn)
+        .set("filterQuery", filterQuery);
+    }
+
+    // Get country data from API
+    return this.http.get<ApiResult<Country>>(url, { params });
+  }
+
+  /**
+   * Checks to see if the give city object already exists.
+   */
+  public isDuplicateCity(item: City): Observable<boolean> {
+    return this.http.post<boolean>(this.getUrl('api/Cities/IsDuplicateCity'), item);
   }
 
   // #endregion

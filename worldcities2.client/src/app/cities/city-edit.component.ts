@@ -92,10 +92,9 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       city.countryID = +this.form.controls['countryId'].value;
 
       // Call the server to check if the city is a duplicate
-      var url = `${environment.baseUrl}api/cities/IsDuplicateCity`;
-      return this.http.post<boolean>(url, city)
+      return this.cityService.isDuplicateCity(city)
         .pipe(map(result => {
-          return (result ? { isDuplicateCity: true } : null);
+          return (result ? { isDuplicateCity: true } : null); 
         }));
     };
   }
@@ -118,7 +117,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       // Fetch the city from the server.
       var url = environment.baseUrl + `api/cities/${this.id}`;
 
-      this.http.get<City>(url).subscribe({
+      this.cityService.get(this.id).subscribe({
         next: (result) => {
           this.city = result;
           this.title = `Edit - ${this.city.name}`;
@@ -142,13 +141,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   public loadCountries(): void {
 
     // Fetch all the countries from the server
-    var url = `${environment.baseUrl}api/countries`;
-    var params = new HttpParams()
-      .set("pageIndex", "0")
-      .set("pageSize", "9999")
-      .set("sortColumn", "name");
-
-    this.http.get<any>(url, { params })
+    this.cityService.getCountries(0, 9999, "name", "asc", null, null)
       .subscribe({
         next: (result) => {
           this.countries = result.data;
