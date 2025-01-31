@@ -69,5 +69,20 @@ export class CountryService extends BaseDataService<Country> {
     return this.http.post<Country>(this.getUrl('api/Countries'), item);
   }
 
+  /**
+   * Checks if the field value is a duplicate.
+   */ 
+  public isDuplicateField(countryId: number, fieldName: string, fieldValue: string): Observable<boolean> {
+
+    // Set params
+    var params = new HttpParams()
+      .set("countryId", countryId)
+      .set("fieldName", fieldName)
+      .set("fieldValue", fieldValue);
+
+    // Make post request to IsDuplicateField() in API controller
+    return this.http.post<boolean>(this.getUrl("api/Countries/IsDuplicateField"), null, { params });
+  }
+
   // #endregion
 }
