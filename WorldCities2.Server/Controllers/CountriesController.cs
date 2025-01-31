@@ -16,8 +16,14 @@ namespace WorldCities2.Server.Controllers
     /// <param name="context"></param>
     [Route("api/[controller]")]
     [ApiController]
-    public class CountriesController(ApplicationDbContext context) : DataControllerBase<CountryDTO>(context)
+    public class CountriesController(ApplicationDbContext context) : ControllerBase
     {
+        #region Properties
+
+        private ApplicationDbContext _context = context;
+        
+        #endregion
+
         #region Private Methods
 
         /// <summary>
@@ -36,12 +42,12 @@ namespace WorldCities2.Server.Controllers
 
         /// <inheritdoc/>
         [HttpGet]
-        public override async Task<ActionResult<APIResult<CountryDTO>>> GetItems(int pageIndex = 0,
-                                                                                 int pageSize = 10,
-                                                                                 string? sortColumn = null,
-                                                                                 string? sortOrder = null,
-                                                                                 string? filterColumn = null,
-                                                                                 string? filterQuery = null) 
+        public async Task<ActionResult<APIResult<CountryDTO>>> GetItems(int pageIndex = 0,
+                                                                        int pageSize = 10,
+                                                                        string? sortColumn = null,
+                                                                        string? sortOrder = null,
+                                                                        string? filterColumn = null,
+                                                                        string? filterQuery = null) 
         {
             try
             {

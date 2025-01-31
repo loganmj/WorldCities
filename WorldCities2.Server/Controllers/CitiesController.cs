@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WorldCities2.Server.Controllers;
 using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
 
@@ -11,8 +10,14 @@ namespace WorldCities.Server.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class CitiesController(ApplicationDbContext context) : DataControllerBase<CityDTO>(context)
+    public class CitiesController(ApplicationDbContext context) : ControllerBase
     {
+        #region Fields
+        
+        private ApplicationDbContext _context = context;
+        
+        #endregion
+
         #region Private Methods
 
         /// <summary>
@@ -41,12 +46,12 @@ namespace WorldCities.Server.Controllers
         /// <param name="filterQuery"></param>
         /// <returns>Returns an APIResult containing the result data.</returns>
         [HttpGet]
-        public override async Task<ActionResult<APIResult<CityDTO>>> GetItems(int pageIndex = 0,
-                                                               int pageSize = 10,
-                                                               string? sortColumn = null,
-                                                               string? sortOrder = null,
-                                                               string? filterColumn = null,
-                                                               string? filterQuery = null) 
+        public async Task<ActionResult<APIResult<CityDTO>>> GetCities(int pageIndex = 0,
+                                                                      int pageSize = 10,
+                                                                      string? sortColumn = null,
+                                                                      string? sortOrder = null,
+                                                                      string? filterColumn = null,
+                                                                      string? filterQuery = null) 
         {
             try
             {
