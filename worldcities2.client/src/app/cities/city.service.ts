@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { BaseDataService } from "../base-data.service";
 import { City } from "./city";
 import { Observable } from "rxjs";
-import { ApiResult } from "../ApiResult";
+import { ApiResult } from "../apiResult";
 import { HttpParams } from "@angular/common/http";
 import { Country } from "../countries/country";
 
