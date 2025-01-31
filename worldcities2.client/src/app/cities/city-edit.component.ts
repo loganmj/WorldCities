@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { Country } from '../countries/country';
 import { map, Observable } from 'rxjs';
 import { BaseFormComponent } from '../base-form.component';
+import { CityService } from './city.service';
 
 /**
  * A component that allows the user to edit a city.
@@ -50,7 +51,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   /**
    * Initializes a new instance of the CityEditComponent class.
    */ 
-  public constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) {
+  public constructor(private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient, private formBuilder: FormBuilder, private cityService: CityService) {
     super();
   }
 
@@ -59,14 +60,11 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   // #region Public Methods
 
   /**
- * Called when the component is initialized.
- */
+   * Called when the component is initialized.
+   */
   public ngOnInit(): void {
 
     // Build form
-
-    // /* New way
-
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       latitude: ['', [Validators.required, Validators.pattern(/^-?\d+(\.\d{1,4})?$/)]],
@@ -94,10 +92,9 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       city.countryID = +this.form.controls['countryId'].value;
 
       // Call the server to check if the city is a duplicate
-      var url = `${environment.baseUrl}api/cities/IsDuplicateCity`;
-      return this.http.post<boolean>(url, city)
+      return this.cityService.isDuplicateCity(city)
         .pipe(map(result => {
-          return (result ? { isDuplicateCity: true } : null);
+          return (result ? { isDuplicateCity: true } : null); 
         }));
     };
   }
@@ -120,8 +117,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       // Fetch the city from the server.
       var url = environment.baseUrl + `api/cities/${this.id}`;
 
-      // NOTE: This is called AJAX. It is asynchronous data communication.
-      this.http.get<City>(url).subscribe({
+      this.cityService.get(this.id).subscribe({
         next: (result) => {
           this.city = result;
           this.title = `Edit - ${this.city.name}`;
@@ -145,13 +141,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   public loadCountries(): void {
 
     // Fetch all the countries from the server
-    var url = `${environment.baseUrl}api/countries`;
-    var params = new HttpParams()
-      .set("pageIndex", "0")
-      .set("pageSize", "9999")
-      .set("sortColumn", "name");
-
-    this.http.get<any>(url, { params })
+    this.cityService.getCountries(0, 9999, "name", "asc", null, null)
       .subscribe({
         next: (result) => {
           this.countries = result.data;
@@ -177,14 +167,10 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
     city.longitude = +this.form.controls['longitude'].value;
     city.countryID = +this.form.controls['countryId'].value;
 
-    // Edit city
+    // Update the given city.
     if (this.id) {
-
-      // Put the city data to the server.
-      var url = `${environment.baseUrl}api/Cities/${city.id}`;
-
-      this.http
-        .put<City>(url, city)
+      this.cityService
+        .put(city)
         .subscribe({
           next: (result) => {
             console.log(`City ${city!.id} has been updated.`);
@@ -197,10 +183,8 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
     }
 
     // Post a new city to the server.
-    var url = `${environment.baseUrl}api/Cities`;
-
-    this.http
-      .post<City>(url, city)
+    this.cityService
+      .post(city)
       .subscribe({
         next: (result) => {
           console.log(`City ${result.id} has been created.`);
