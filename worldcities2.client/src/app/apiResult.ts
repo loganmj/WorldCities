@@ -1,9 +1,6 @@
 /*
  * An interface for API Result objects.
  */
-@Injectable({
-  providedIn: 'root'
-})
 export interface ApiResult<T> {
 
   // #region Properties
