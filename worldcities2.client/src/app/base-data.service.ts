@@ -14,7 +14,7 @@ export abstract class BaseDataService<T> {
 
   // #region Constructors
 
-  /*
+  /**
    * Constructor
    */
   constructor(protected http: HttpClient) { }
@@ -23,8 +23,8 @@ export abstract class BaseDataService<T> {
 
   // #region Protected Methods
 
-  /*
-   * Gets the current url path.
+  /**
+   * Appends the given URL string to the environment base URL.
    */
   protected getUrl(url: string) {
     return `${environment.baseUrl}${url}`;
@@ -34,22 +34,22 @@ export abstract class BaseDataService<T> {
 
   // #region Public Methods
 
-  /*
+  /**
    * Gets object data from the API result.
    */
   public abstract getData(pageIndex: number, pageSize: number, sortColumn: string, sortOrder: string, filterColumn: string | null, filterQuery: string | null): Observable<ApiResult<T>>;
 
-  /*
+  /**
    * Sends a get request to the API.
    */
   public abstract get(id: number): Observable<T>;
 
-  /*
+  /**
    * Sends a put request to the API.
    */
   public abstract put(item: T): Observable<T>;
 
-  /*
+  /**
    * Sends a post request to the API.
    */
   public abstract post(item: T): Observable<T>;
