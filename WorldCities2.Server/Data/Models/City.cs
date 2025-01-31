@@ -46,10 +46,5 @@ public class City
     [ForeignKey(nameof(Country))]
     public int CountryId { get; set; }
 
-    /// <summary>
-    /// The country related to this city.
-    /// </summary>
-    public Country? Country { get; set; }
-
     #endregion
 }

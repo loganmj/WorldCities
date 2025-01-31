@@ -7,4 +7,5 @@ export interface City {
   latitude: number;
   longitude: number;
   countryID: number;
+  country: string;
 }

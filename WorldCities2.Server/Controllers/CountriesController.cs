@@ -35,6 +35,7 @@ namespace WorldCities2.Server.Controllers
         #region Public Methods
 
         /// <inheritdoc/>
+        [HttpGet]
         public override async Task<ActionResult<APIResult<CountryDTO>>> GetItems(int pageIndex = 0,
                                                                                  int pageSize = 10,
                                                                                  string? sortColumn = null,
@@ -70,58 +71,6 @@ namespace WorldCities2.Server.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-
-        /*
-
-        /// <summary>
-        /// Gets all object data.
-        /// Allows for sorting, filtering, and pagination.
-        /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="sortColumn"></param>
-        /// <param name="sortOrder"></param>
-        /// <param name="filterColumn"></param>
-        /// <param name="filterQuery"></param>
-        /// <returns>Returns an APIResult containing the result data.</returns>
-        [HttpGet]
-        public async Task<ActionResult<APIResult<CountryDTO>>>GetItems(int pageIndex = 0,
-                                                                            int pageSize = 10,
-                                                                            string? sortColumn = null,
-                                                                            string? sortOrder = null,
-                                                                            string? filterColumn = null,
-                                                                            string? filterQuery = null)
-        {
-            try
-            {
-                // The select statement here is being used to transform normal country objects into country DTO objects.
-                return await APIResult<CountryDTO>.CreateAsync(
-                    _context.Countries.AsNoTracking()
-                                      .Select(c => new CountryDTO
-                                      {
-                                          Id = c.Id,
-                                          Name = c.Name,
-                                          ISO2 = c.ISO2,
-                                          ISO3 = c.ISO3,
-                                          NumberOfCities = c.Cities == null ? 0 : c.Cities.Count
-                                      }),
-                    pageIndex,
-                    pageSize,
-                    sortColumn,
-                    sortOrder,
-                    filterColumn,
-                    filterQuery);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-
-                // Note: This error status code is not particularly helpful
-                return StatusCode(500, "Internal server error");
-            }
-        }
-
-        */
 
         /// <summary>
         /// Gets a Country with the specified ID.

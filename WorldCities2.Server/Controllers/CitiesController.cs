@@ -11,7 +11,7 @@ namespace WorldCities.Server.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class CitiesController(ApplicationDbContext context) : DataControllerBase<City>(context)
+    public class CitiesController(ApplicationDbContext context) : DataControllerBase<CityDTO>(context)
     {
         #region Private Methods
 
@@ -28,6 +28,51 @@ namespace WorldCities.Server.Controllers
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Gets all object data.
+        /// Allows for sorting, filtering, and pagination.
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="sortColumn"></param>
+        /// <param name="sortOrder"></param>
+        /// <param name="filterColumn"></param>
+        /// <param name="filterQuery"></param>
+        /// <returns>Returns an APIResult containing the result data.</returns>
+        [HttpGet]
+        public override async Task<ActionResult<APIResult<CityDTO>>> GetItems(int pageIndex = 0,
+                                                               int pageSize = 10,
+                                                               string? sortColumn = null,
+                                                               string? sortOrder = null,
+                                                               string? filterColumn = null,
+                                                               string? filterQuery = null) 
+        {
+            try
+            {
+                return await APIResult<CityDTO>.CreateAsync(
+                    _context.Cities.AsNoTracking()
+                    .Select((city) => new CityDTO
+                    {
+                        ID = city.ID,
+                        Name = city.Name,
+                        Latitude = city.Latitude,
+                        Longitude = city.Longitude,
+                        Country = "TEST"
+                    }),
+                    pageIndex,
+                    pageSize,
+                    sortColumn,
+                    sortOrder,
+                    filterColumn,
+                    filterQuery);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
 
         /// <summary>
         /// Gets a city with the specified ID from the database.

@@ -59,7 +59,7 @@ export class CitiesComponent implements OnInit {
   /**
    * The columns to display in the data table.
    */
-  public displayedColumns: string[] = ['id', 'name', 'latitude', 'longitude'];
+  public displayedColumns: string[] = ['id', 'name', 'latitude', 'longitude', 'country'];
 
   /**
    * The '!' character (definite assignment assertion operator)
