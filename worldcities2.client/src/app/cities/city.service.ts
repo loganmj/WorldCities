@@ -3,7 +3,7 @@ import { BaseDataService } from "../base-data.service";
 import { City } from "./city";
 import { Observable } from "rxjs";
 import { ApiResult } from "../apiResult";
-import { HttpParams } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Country } from "../countries/country";
 
 /**
@@ -14,10 +14,13 @@ import { Country } from "../countries/country";
 })
 export class CityService extends BaseDataService<City> {
 
-  // #region Properties
-  // #endregion
+  // #region Constructors
 
-  // #region Construtors
+  /**
+   * Constructor
+   */ 
+  public constructor(http: HttpClient) { super(http); }
+
   // #endregion
 
   // #region Public Methods

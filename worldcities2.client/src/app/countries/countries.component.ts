@@ -1,11 +1,10 @@
 import { Country } from './country';
-import { environment } from '../../environments/environment';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort, } from '@angular/material/sort';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { debounce, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { CountryService } from './country.service';
 
 /**
  * A component for Country data objects.
@@ -22,34 +21,13 @@ export class CountriesComponent implements OnInit {
 
   private readonly DEFAULT_PAGE_INDEX: number = 0;
   private readonly DEFAULT_PAGE_SIZE: number = 10;
-  private readonly DEFAULT_SORT_COLUMN: string = "Name";
+  private readonly DEFAULT_SORT_COLUMN: string = "name";
   private readonly DEFAULT_SORT_ORDER: "asc" | "desc" = "asc";
   private readonly DEFAULT_FILTER_COLUMN: string = "name";
 
   // #endregion
 
   // #region Properties
-
-  /**
-   * The desired page index.
-   */
-  public pageIndex: number = this.DEFAULT_PAGE_INDEX;
-
-  /**
-   * The desired page size.
-   */
-  public pageSize: number = this.DEFAULT_PAGE_SIZE;
-
-  /**
-   * The name of the data column to sort by.
-   */
-  public sortColumn: string = this.DEFAULT_SORT_COLUMN;
-
-  /**
-   * The direction to sort by (ascending or descending). 
-   * Can have a value of "ASC" or "DESC"
-   */
-  public sortOrder: "asc" | "desc" = this.DEFAULT_SORT_ORDER;
 
   /**
  * The query string for a data filter.
@@ -93,7 +71,7 @@ export class CountriesComponent implements OnInit {
    * The shorthand in the parameter creates a private HttpClient field
    * that is accessable by the rest of the class.
    */
-  constructor(private http: HttpClient) { }
+  constructor(private countryService: CountryService) { }
 
   // #endregion
 
@@ -110,12 +88,13 @@ export class CountriesComponent implements OnInit {
 
   /**
    * Populates the data.
+   * Sets the pagination to default config values.
    */
   public loadData(query?: string): void {
 
     var pageEvent = new PageEvent();
-    pageEvent.pageIndex = this.pageIndex;
-    pageEvent.pageSize = this.pageSize;
+    pageEvent.pageIndex = this.DEFAULT_PAGE_INDEX;
+    pageEvent.pageSize = this.DEFAULT_PAGE_SIZE;
     this.filterQuery = query;
     this.getData(pageEvent);
   }
@@ -124,35 +103,21 @@ export class CountriesComponent implements OnInit {
    * Retrieves paginated Country data from the API.
    */
   public getData(event: PageEvent) {
-    var url = environment.baseUrl + 'api/Countries';
 
-    // Check sort values
-    const sortColumn = this.sort && this.sort.active ? this.sort.active : this.sortColumn;
-    const sortOrder = this.sort && this.sort.direction ? this.sort.direction : this.sortOrder;
+    // Set parameters
+    var sortColumn = this.sort && this.sort.active ? this.sort.active : this.DEFAULT_SORT_COLUMN;
+    var sortOrder = this.sort && this.sort.direction ? this.sort.direction : this.DEFAULT_SORT_ORDER;
+    var filterColumn = this.filterQuery ? this.DEFAULT_FILTER_COLUMN : null;
+    var filterQuery = this.filterQuery ? this.filterQuery : null;
 
-    // Get page index and page size from the url parameters.
-    var params = new HttpParams()
-      .set("pageIndex", event.pageIndex.toString())
-      .set("pageSize", event.pageSize.toString())
-      .set("sortColumn", sortColumn)
-      .set("sortOrder", sortOrder);
-
-    // Apply filter
-    if (this.filterQuery) {
-      params = params
-        .set("filterColumn", this.DEFAULT_FILTER_COLUMN)
-        .set("filterQuery", this.filterQuery);
-    }
-
-    // Assume we are receiving our custom paginated data type from the API.
-    // Retrieve the country data and the additional metadata from the return object.
-    this.http.get<any>(url, { params })
+    // Get data using the city data service
+    this.countryService.getData(event.pageIndex, event.pageSize, sortColumn, sortOrder, filterColumn, filterQuery)
       .subscribe({
         next: (result) => {
           this.paginator.length = result.totalCount;
           this.paginator.pageIndex = result.pageIndex;
           this.paginator.pageSize = result.pageSize;
-          this.countries.data = result.data;
+          this.countries = new MatTableDataSource<Country>(result.data);
         },
         error: (error) => console.error(error)
       });

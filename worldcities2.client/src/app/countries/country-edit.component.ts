@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { BaseFormComponent } from '../base-form.component';
+import { CountryService } from './country.service';
 
 /**
  * Provides a form for editing country data.
@@ -13,7 +14,6 @@ import { BaseFormComponent } from '../base-form.component';
 @Component({
   selector: 'app-country-edit',
   standalone: false,
-  
   templateUrl: './country-edit.component.html',
   styleUrl: './country-edit.component.scss'
 })
@@ -49,12 +49,8 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
 
   /**
    * Constructor
-   * @param formBuilder
-   * @param activatedRoute
-   * @param router
-   * @param http
-   */ 
-  public constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient) {
+   */
+  public constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private countryService: CountryService) {
       super();
   }
 
@@ -91,17 +87,16 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
     // If editing an existing ID, fetch the country from the server
     if (this.id) {
 
-      var url = `${environment.baseUrl}api/Countries/${this.id}`;
+      this.countryService.get(this.id)
+        .subscribe({
+          next: (result) => {
+            this.country = result;
+            this.title = `Edit - ${this.country.name}`;
 
-      this.http.get<Country>(url).subscribe({
-        next: (result) => {
-          this.country = result;
-          this.title = `Edit - ${this.country.name}`;
-
-          // Update the form with the country value
-          this.form.patchValue(this.country);
-        },
-        error: (error) => { console.error(error); }
+            // Update the form with the country value
+            this.form.patchValue(this.country);
+          },
+          error: (error) => { console.error(error); }
       });
 
       return;
@@ -120,18 +115,11 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
     // The returned method takes a form control as a parameter, and returns an observable.
     return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
 
-      // Create http parameters
-      var params = new HttpParams()
-        .set("countryId", (this.id) ? this.id.toString() : "0")
-        .set("fieldName", fieldName)
-        .set("fieldValue", control.value);
-
-      // Makes an http post request, and returns the result of the IsDuplicateField method from the API controller.
-      var url = `${environment.baseUrl}api/Countries/IsDuplicateField`;
-      return this.http.post<boolean>(url, null, { params })
-        .pipe(map(result => {
-          return (result ? { isDuplicateField: true } : null);
-        }));
+      return this.countryService.isDuplicateField(
+        this.id ?? 0,
+        fieldName,
+        control.value)
+        .pipe(map(result => { return result ? { isDuplicateField: true } : null }))
     }
   }
 
@@ -141,39 +129,44 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
   public onSubmit(): void {
 
     // Assemble the country object
-    var country = (this.id) ? this.country : <Country>{};
+    var country = this.id ? this.country : <Country>{};
 
-    if (country) {
-      country.name = this.form.controls["name"].value;
-      country.iso2 = this.form.controls["iso2"].value;
-      country.iso3 = this.form.controls["iso3"].value;
+    if (!country) {
+      console.log("Failed to submit. Country object does not exist.");
+      return;
     }
 
-    // If editing an existing country, make a put request
-    if (this.id) {
-      var url = `${environment.baseUrl}api/Countries/${this.id}`;
+    // If editing an existing country, assemble the rest of the form data
+    // and make a put request
+    country.name = this.form.controls["name"].value;
+    country.iso2 = this.form.controls["iso2"].value;
+    country.iso3 = this.form.controls["iso3"].value;
 
-      this.http.put<Country>(url, country)
+    if (this.id)
+    {
+      this.countryService
+        .put(country)
         .subscribe({
           next: (result) => {
-            console.log(`Country ${country!.id} has been updated.`);
 
             // Go back to countries view
+            console.log(`Country ${country!.id} has been updated.`);
             this.router.navigate(["/countries"]);
           },
-          error: (error) => { console.error(error) }
+          error: (error) => console.error(error)
         });
+
+      return;
     }
 
     // Otherwise, post the new country object
-    var url = `${environment.baseUrl}api/Countries`;
-
-    this.http.post<Country>(url, country)
+    this.countryService
+      .post(country)
       .subscribe({
         next: (result) => {
-          console.log(`Country ${country!.name} has been added.`);
 
           // Go back to countries view
+          console.log(`Country ${country!.name} has been added.`);
           this.router.navigate(["/countries"]);
         },
         error: (error) => { console.error(error); }

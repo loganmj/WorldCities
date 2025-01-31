@@ -51,7 +51,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   /**
    * Initializes a new instance of the CityEditComponent class.
    */ 
-  public constructor(private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient, private formBuilder: FormBuilder, private cityService: CityService) {
+  public constructor(private activatedRoute: ActivatedRoute, private router: Router, private formBuilder: FormBuilder, private cityService: CityService) {
     super();
   }
 
@@ -158,6 +158,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
 
     // If city is falsey, return.
     if (!city) {
+      console.log("Failed to submit. City object does not exist.");
       return;
     }
 

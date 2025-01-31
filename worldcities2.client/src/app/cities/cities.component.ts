@@ -1,6 +1,4 @@
 import { City } from './city';
-import { environment } from '../../environments/environment';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -83,9 +81,6 @@ export class CitiesComponent implements OnInit {
 
   // #endregion
 
-  // #region Private Methods
-  // #endregion
-
   // #region Public Methods
 
   /**
@@ -121,8 +116,8 @@ export class CitiesComponent implements OnInit {
     // Set parameters
     var sortColumn = this.sort && this.sort.active ? this.sort.active : this.DEFAULT_SORT_COLUMN;
     var sortOrder = this.sort && this.sort.direction ? this.sort.direction : this.DEFAULT_SORT_ORDER;
-    var filterColumn = this.DEFAULT_FILTER_COLUMN;
-    var filterQuery = (this.filterQuery) ? this.filterQuery : null;
+    var filterColumn = this.filterQuery ? this.DEFAULT_FILTER_COLUMN : null;
+    var filterQuery = this.filterQuery ? this.filterQuery : null;
 
     // Get data using the city data service
     this.cityService.getData(event.pageIndex, event.pageSize, sortColumn, sortOrder, filterColumn, filterQuery)
