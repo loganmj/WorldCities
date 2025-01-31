@@ -20,7 +20,7 @@ namespace WorldCities2.Server.Controllers
     {
         #region Properties
 
-        private ApplicationDbContext _context = context;
+        private readonly ApplicationDbContext _context = context;
         
         #endregion
 

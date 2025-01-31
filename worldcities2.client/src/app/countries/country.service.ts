@@ -30,7 +30,7 @@ export class CountryService extends BaseDataService<Country> {
   public override getData(pageIndex: number, pageSize: number, sortColumn: string, sortOrder: string, filterColumn: string | null, filterQuery: string | null): Observable<ApiResult<Country>> {
 
     // Get url
-    var url = this.getUrl(`/api/Countries`);
+    var url = this.getUrl('api/Countries');
 
     // Create HttpParams
     var params = new HttpParams()
@@ -52,21 +52,21 @@ export class CountryService extends BaseDataService<Country> {
    * Gets a city with the given ID.
    */ 
   public override get(id: number): Observable<Country> {
-    return this.http.get<Country>(this.getUrl(`/api/Countries/${id}`));
+    return this.http.get<Country>(this.getUrl(`api/Countries/${id}`));
   }
 
   /**
    * Updates a country.
    */ 
   public override put(item: Country): Observable<Country> {
-    return this.http.put<Country>(this.getUrl(`/api/Countries/${item.id}`), item);
+    return this.http.put<Country>(this.getUrl(`api/Countries/${item.id}`), item);
   }
 
   /**
    * Posts a new country.
    */ 
   public override post(item: Country): Observable<Country> {
-    return this.http.post<Country>(this.getUrl(`/api/Countries`), item);
+    return this.http.post<Country>(this.getUrl('api/Countries'), item);
   }
 
   // #endregion
