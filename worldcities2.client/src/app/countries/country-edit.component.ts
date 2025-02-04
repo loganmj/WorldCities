@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Country } from './country';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { BaseFormComponent } from '../base-form.component';
 import { CountryService } from './country.service';
 
