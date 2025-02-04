@@ -1,2 +1,7 @@
-# WorldCities
-Re-creating the WorldCities repository to work with .NET 9 and the latest Angular version.
+#WorldCities
+
+## Description
+A full stack ASP.NET and Angular application that displays country and city data for the user.
+
+## Database
+Uses MySQL for a database.
