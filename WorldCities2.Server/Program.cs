@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using Serilog;
+using Serilog.Events;
 using WorldCities2.Server.Data;
 
 // Use non-commercial version of EPPlus
@@ -23,10 +25,26 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddControllers();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// Add Serilog support
+builder.Host.UseSerilog((ctx, lc) =>
+{
+    lc.ReadFrom.Configuration(ctx.Configuration)
+    .WriteTo.MySQL(
+      connectionString: ctx.Configuration.GetConnectionString("DefaultConnection"),
+      restrictedToMinimumLevel: LogEventLevel.Information,
+      tableName: "LogEvents",
+      storeTimestampInUtc: true)
+    .WriteTo.Console();
+});
+
 var app = builder.Build();
+
+// Enable logging of HTTP requests
+app.UseSerilogRequestLogging();
 
 app.UseDefaultFiles();
 app.MapStaticAssets();
