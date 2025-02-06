@@ -170,6 +170,16 @@ namespace WorldCities.Server.Controllers
             });
         }
 
+        /// <summary>
+        /// Creates a table with default users.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult> CreateDefaultUsers()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }
