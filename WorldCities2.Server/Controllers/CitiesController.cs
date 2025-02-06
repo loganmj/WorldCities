@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
@@ -105,6 +106,7 @@ namespace WorldCities.Server.Controllers
         /// <param name="city"></param>
         /// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles ="RegisteredUser")]
         public async Task<IActionResult> PutCity(int id, City city)
         {
             if (id != city.ID)
@@ -139,6 +141,7 @@ namespace WorldCities.Server.Controllers
         /// <param name="city"></param>
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "RegisteredUser")]
         public async Task<ActionResult<City>> PostCity(City city)
         {
             _context.Cities.Add(city);
@@ -152,6 +155,7 @@ namespace WorldCities.Server.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteCity(int id)
         {
             var city = await _context.Cities.FindAsync(id);

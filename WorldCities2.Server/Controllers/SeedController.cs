@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -20,6 +21,7 @@ namespace WorldCities.Server.Controllers
     /// <param name="context"></param>
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize(Roles = "Administrator")]
     public class SeedController(ApplicationDbContext context,
                                 IWebHostEnvironment environment,
                                 RoleManager<IdentityRole> roleManager,
