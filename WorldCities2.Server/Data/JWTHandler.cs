@@ -38,6 +38,11 @@ namespace WorldCities2.Server.Data
                 throw new ArgumentNullException($"The configured security key is null.", nameof(key));
             }
 
+            if (key.Length < 32)
+            {
+                throw new ArgumentException($"The configured security key must be at least 32 characters long.", nameof(key));
+            }
+
             // Created a signing credentials object from the key value
             return new SigningCredentials(new SymmetricSecurityKey((byte[]?)Encoding.UTF8.GetBytes(key)), SecurityAlgorithms.HmacSha256);
         }
