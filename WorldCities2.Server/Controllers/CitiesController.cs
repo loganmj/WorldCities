@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
 
-namespace WorldCities.Server.Controllers
+namespace WorldCities2.Server.Controllers
 {
     /// <summary>
     /// An API controller for city data

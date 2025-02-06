@@ -7,7 +7,7 @@ using System.Security;
 using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
 
-namespace WorldCities.Server.Controllers
+namespace WorldCities2.Server.Controllers
 {
     /// <summary>
     /// Used to seed our local database for dev testing.
@@ -184,7 +184,7 @@ namespace WorldCities.Server.Controllers
             var role_Administrator = "Administrator";
 
             // Create the default roles if they do not exist
-            if (await _roleManager.FindByNameAsync(role_RegisteredUser) == null) 
+            if (await _roleManager.FindByNameAsync(role_RegisteredUser) == null)
             {
                 await _roleManager.CreateAsync(new IdentityRole(role_RegisteredUser));
             }
@@ -200,7 +200,7 @@ namespace WorldCities.Server.Controllers
             // Check if the admin user already exists
             var email_Admin = "admin@email.com";
 
-            if (await _userManager.FindByNameAsync(email_Admin) == null) 
+            if (await _userManager.FindByNameAsync(email_Admin) == null)
             {
                 // Create a new admin account
                 var user_Admin = new ApplicationUser()
@@ -253,14 +253,14 @@ namespace WorldCities.Server.Controllers
             }
 
             // If we added at least one user, persist changes to the database
-            if (addedUserList.Count > 0) 
+            if (addedUserList.Count > 0)
             {
                 await _context.SaveChangesAsync();
             }
 
-            return new JsonResult(new 
+            return new JsonResult(new
             {
-                Count = addedUserList.Count,
+                addedUserList.Count,
                 Users = addedUserList
             });
         }

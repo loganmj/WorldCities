@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using WorldCities.Server.Controllers;
+using WorldCities2.Server.Controllers;
 using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
 
