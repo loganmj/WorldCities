@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { LoginRequest } from "./login-request";
 import { LoginResult } from "./login-result";
-import { Observable, tap } from "rxjs";
+import { BehaviorSubject, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 
 /**
@@ -13,12 +13,19 @@ import { environment } from "../../environments/environment";
 })
 export class AuthService {
 
+  // #region Fields
+
+  private _tokenKey: string = "token";
+  private _authStatus = new BehaviorSubject<boolean>(false);
+
+  // #endregion
+
   // #region Properties
 
   /**
-   * The JWT token key.
+   * Observable authentication status property.
    */ 
-  public tokenKey: string = "token";
+  public authStatus = this._authStatus.asObservable();
 
   // #endregion
 
@@ -31,7 +38,27 @@ export class AuthService {
 
   // #endregion
 
+  // #region Private Methods
+
+  /**
+   * Sets the authStatus property
+   */ 
+  private setAuthStatus(isAuthenticated: boolean): void {
+    this._authStatus.next(isAuthenticated);
+  }
+
+  // #endregion
+
   // #region Public Methods
+
+  /**
+   * Initializes the observable authentication status property.
+   */ 
+  public init(): void {
+    if (this.isAuthenticated()) {
+      this.setAuthStatus(true);
+    }
+  }
 
   /**
    * Checks if we have a local authentication token.
@@ -44,7 +71,7 @@ export class AuthService {
    * Attempts to retrieve a stored authentication token.
    */ 
   public getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return localStorage.getItem(this._tokenKey);
   }
 
   /**
@@ -58,9 +85,18 @@ export class AuthService {
     return this.http.post<LoginResult>(url, request)
       .pipe(tap(loginResult => {
         if (loginResult.success && loginResult.token) {
-          localStorage.setItem(this.tokenKey, loginResult.token);
+          localStorage.setItem(this._tokenKey, loginResult.token);
+          this.setAuthStatus(true);
         }
       }));
+  }
+
+  /**
+   * Logs the user out.
+   */ 
+  public logout(): void {
+    localStorage.removeItem(this._tokenKey);
+    this.setAuthStatus(false);
   }
 
   // #endregion
