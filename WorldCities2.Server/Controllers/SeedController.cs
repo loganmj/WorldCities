@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using System.Security;
@@ -19,12 +20,19 @@ namespace WorldCities.Server.Controllers
     /// <param name="context"></param>
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class SeedController(ApplicationDbContext context, IWebHostEnvironment environment) : ControllerBase
+    public class SeedController(ApplicationDbContext context,
+                                IWebHostEnvironment environment,
+                                RoleManager<IdentityRole> roleManager,
+                                UserManager<ApplicationUser> userManager,
+                                IConfiguration configuration) : ControllerBase
     {
         #region Fields
 
         private readonly ApplicationDbContext _context = context;
         private readonly IWebHostEnvironment _environment = environment;
+        private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly IConfiguration _configuration = configuration;
 
         #endregion
 
