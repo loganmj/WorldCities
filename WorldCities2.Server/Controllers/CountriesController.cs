@@ -4,6 +4,7 @@ using WorldCities2.Server.Data;
 using WorldCities2.Server.Data.Models;
 using System.Linq.Dynamic.Core;
 using WorldCities2.Server.Security;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WorldCities2.Server.Controllers
 {
@@ -102,6 +103,7 @@ namespace WorldCities2.Server.Controllers
         /// <param name="id"></param>
         /// <param name="country"></param>
         [HttpPut("{id}")]
+        [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> PutCountry(int id, Country country)
         {
             if (id != country.Id)
@@ -135,6 +137,7 @@ namespace WorldCities2.Server.Controllers
         /// </summary>
         /// <param name="country"></param>
         [HttpPost]
+        [Authorize(Roles = "RegisteredUser")]
         public async Task<ActionResult<Country>> PostCountry(Country country)
         {
             _context.Countries.Add(country);
@@ -148,6 +151,7 @@ namespace WorldCities2.Server.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteCountry(int id)
         {
             var country = await _context.Countries.FindAsync(id);
