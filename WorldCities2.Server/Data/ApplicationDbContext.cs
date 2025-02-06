@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using WorldCities2.Server.Data.Models;
 
 namespace WorldCities2.Server.Data;
@@ -6,7 +7,7 @@ namespace WorldCities2.Server.Data;
 /// <summary>
 /// Database context
 /// </summary>
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     #region Constructors
 
