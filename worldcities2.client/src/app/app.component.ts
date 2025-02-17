@@ -1,6 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from './auth/auth.service';
 
+/**
+ * Main app component.
+ */ 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -9,11 +12,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
-
-  ngOnInit() {
-    // TODO
-  }
+  // #region Properties
 
   title = 'worldcities2.client';
+
+  // #endregion
+
+  // #region Constructors
+
+  /**
+   * Constructor
+   */ 
+  public constructor(private authService: AuthService) { }
+
+  // #endregion
+
+  // #region Public Methods
+
+  /**
+   * On init
+   */ 
+  ngOnInit() {
+    this.authService.init();
+  }
+
+  // #endregion
 }
