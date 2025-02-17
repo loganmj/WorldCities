@@ -5,6 +5,7 @@ import { MatSort, } from '@angular/material/sort';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { CountryService } from './country.service';
+import { AuthService } from '../auth/auth.service';
 
 /**
  * A component for Country data objects.
@@ -71,7 +72,7 @@ export class CountriesComponent implements OnInit {
    * The shorthand in the parameter creates a private HttpClient field
    * that is accessable by the rest of the class.
    */
-  constructor(private countryService: CountryService) { }
+  constructor(private countryService: CountryService, public authService: AuthService) { }
 
   // #endregion
 
