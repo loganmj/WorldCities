@@ -1,33 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseFormComponent } from '../base-form.component';
+import { RegisterResult } from './register-result';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { LoginRequest } from './login-request';
-import { LoginResult } from './login-result';
+import { RegisterRequest } from './register-request';
 
 /**
- * Allows the user to log in to the app.
+ * Allows a user to create a new account.
  */ 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: false,
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss'
 })
-export class LoginComponent extends BaseFormComponent implements OnInit {
+export class RegisterComponent extends BaseFormComponent implements OnInit {
 
   // #region Properties
 
   /**
    * The title of the component.
    */ 
-  title?: string;
+  public title?: string = "Create Account";
 
   /**
-   * The login result reference.
-   */
-  loginResult?: LoginResult;
+   * The registration result object.
+   */ 
+  public registerResult?: RegisterResult;
 
   // #endregion
 
@@ -35,7 +35,7 @@ export class LoginComponent extends BaseFormComponent implements OnInit {
 
   /**
    * Constructor
-   */ 
+   */
   public constructor(private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService) {
     super();
   }
@@ -45,9 +45,9 @@ export class LoginComponent extends BaseFormComponent implements OnInit {
   // #region Public Methods
 
   /**
-   * On initialization lifecycle method.
+   * On Init
    */ 
-  public ngOnInit() : void {
+  public ngOnInit(): void {
     this.form = new FormGroup({
       email: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required)
@@ -58,9 +58,11 @@ export class LoginComponent extends BaseFormComponent implements OnInit {
    * Handles a submission request.
    */ 
   public onSubmit(): void {
-    var loginRequest = <LoginRequest>{};
-    loginRequest.email = this.form.controls['email'].value;
-    loginRequest.password = this.form.controls['password'].value;
+    var registerRequest = <RegisterRequest>{};
+    registerRequest.email = this.form.controls['email'].value;
+    registerRequest.password = this.form.controls['password'].value;
+
+    /* This is the login code, we need to handle registration instead
 
     this.authService
       .login(loginRequest)
@@ -82,6 +84,8 @@ export class LoginComponent extends BaseFormComponent implements OnInit {
           }
         }
       });
+
+      */
   }
 
   // #endregion

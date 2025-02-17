@@ -1,11 +1,11 @@
-<div class="login">
-  <h1>Login</h1>
+<div class="register">
+  <h1>Create Account</h1>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-    <!-- Display login error -->
+    <!-- Display registration error -->
     <p>
-      <mat-error *ngIf="loginResult && !loginResult.success">
-        <strong>ERROR</strong>: {{loginResult.message}}
+      <mat-error *ngIf="registerResult && !registerResult.success">
+        <strong>ERROR</strong>: {{registerResult.message}}
       </mat-error>
     </p>
 
@@ -25,13 +25,13 @@
 
     <!-- Submit/Cancel buttons -->
     <div>
-      <button mat-flat-button color="primary" type="submit">Login</button>
+      <button mat-flat-button color="primary" type="submit">Create Account</button>
       <button mat-flat-button color="secondary" [routerLink]="['/']">Cancel</button>
     </div>
 
-    <!-- Create account -->
+    <!-- Log in -->
     <div>
-      <p>Don't have an account? <a [routerLink]="['/signup']">Sign up.</a></p>
+      <p>Already have an account? <a [routerLink]="['/login']">Log in.</a></p>
     </div>
   </form>
 </div>
