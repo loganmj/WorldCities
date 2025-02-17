@@ -7,7 +7,7 @@
 <!-- Loading message -->
 <p *ngIf="!countries"><em>Loading ...</em></p>
 
-<!-- Add/Edit country button -->
+<!-- Add country button -->
 <button mat-flat-button color="primary" class="btn-add" *ngIf="countries && authService.isAuthenticated()" [routerLink]="['/country']">Add a new country.</button>
 
 <!-- Countries table -->

@@ -106,7 +106,7 @@ namespace WorldCities2.Server.Controllers
         /// <param name="city"></param>
         /// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        [Authorize(Roles ="RegisteredUser")]
+        [Authorize(Roles ="Administrator")]
         public async Task<IActionResult> PutCity(int id, City city)
         {
             if (id != city.ID)
@@ -141,7 +141,7 @@ namespace WorldCities2.Server.Controllers
         /// <param name="city"></param>
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize(Roles = "RegisteredUser")]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<City>> PostCity(City city)
         {
             _context.Cities.Add(city);
