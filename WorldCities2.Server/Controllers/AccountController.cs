@@ -55,6 +55,7 @@ namespace WorldCities2.Server.Controllers
         /// </summary>
         /// <param name="registerRequest"></param>
         /// <returns></returns>
+        [HttpPost("Register")]
         public async Task<IActionResult> Register(APIRegisterRequest registerRequest) 
         {
             // Create a new application user object
