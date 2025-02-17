@@ -50,6 +50,37 @@ namespace WorldCities2.Server.Controllers
             return Ok(new APILoginResult() { Success = true, Message = "Login successful", Token = jwt });
         }
 
+        /// <summary>
+        /// Handles a user request to register a new account.
+        /// </summary>
+        /// <param name="registerRequest"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Register(APIRegisterRequest registerRequest) 
+        {
+            // Create a new application user object
+            var user = new ApplicationUser
+            {
+                Email = registerRequest.Email
+            };
+
+            // Call the user manager API to attempt to create the new user
+            var result = await _userManager.CreateAsync(user, registerRequest.Password);
+
+            // If creation failed, return error
+            if (!result.Succeeded) 
+            {
+                return BadRequest(new APIRegisterResult
+                {
+                    Success = false,
+                    Message = "Failed to registure new user.",
+                    Errors = result.Errors.Select(error => error.Description).ToList()
+                });
+            }
+
+            // Handle successful registration
+            return Ok(new APIRegisterResult { Success = true, Message = "New user created."});
+        }
+
         #endregion
     }
 }

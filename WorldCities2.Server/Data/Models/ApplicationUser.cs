@@ -7,7 +7,5 @@ namespace WorldCities2.Server.Data.Models
     /// </summary>
     public class ApplicationUser : IdentityUser
     {
-        #region Properties
-        #endregion
     }
 }
