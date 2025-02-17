@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { CityService } from './city.service';
+import { AuthService } from '../auth/auth.service';
 
 /**
  * A component for City data objects.
@@ -77,7 +78,7 @@ export class CitiesComponent implements OnInit {
    * The shorthand in the parameter creates a private HttpClient field
    * that is accessable by the rest of the class.
    */
-  constructor(private cityService: CityService) { }
+  constructor(private cityService: CityService, public authService: AuthService) { }
 
   // #endregion
 

@@ -8,7 +8,7 @@
 <p *ngIf="!countries"><em>Loading ...</em></p>
 
 <!-- Add country button -->
-<button mat-flat-button color="primary" class="btn-add" [routerLink]="['/country']">Add a new country.</button>
+<button mat-flat-button color="primary" class="btn-add" *ngIf="countries && authService.isAuthenticated()" [routerLink]="['/country']">Add a new country.</button>
 
 <!-- Countries table -->
 <div class="countries-table-container mat-elevation-z8">
