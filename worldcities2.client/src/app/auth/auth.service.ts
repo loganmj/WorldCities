@@ -4,6 +4,8 @@ import { LoginRequest } from "./login-request";
 import { LoginResult } from "./login-result";
 import { BehaviorSubject, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
+import { RegisterRequest } from "./register-request";
+import { RegisterResult } from "./register-result";
 
 /**
  * A JWT authentication service.
@@ -97,6 +99,14 @@ export class AuthService {
   public logout(): void {
     localStorage.removeItem(this._tokenKey);
     this.setAuthStatus(false);
+  }
+
+  /**
+   * Attempts to register a new user account.
+   */ 
+  public register(request: RegisterRequest): Observable<RegisterResult> {
+    var url = `${environment.baseUrl}api/Account/Register`;
+    return this.http.post<RegisterResult>(url, request);
   }
 
   // #endregion
