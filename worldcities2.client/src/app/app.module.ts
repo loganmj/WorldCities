@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -13,6 +13,7 @@ import { CityEditComponent } from './cities/city-edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CountryEditComponent } from './countries/country-edit.component';
 import { LoginComponent } from './auth/login.component';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,12 @@ import { LoginComponent } from './auth/login.component';
   ],
   providers: [
     provideAnimationsAsync(),
-    provideHttpClient()
+    provideHttpClient(),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
