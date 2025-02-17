@@ -5,7 +5,7 @@
     <!-- Display registration error -->
     <p>
       <mat-error *ngIf="registerResult && !registerResult.success">
-        <strong>ERROR</strong>: {{registerResult.message}}
+        <strong *ngFor="let error of registerResult.errors">ERROR: {{error}}</strong>: 
       </mat-error>
     </p>
 

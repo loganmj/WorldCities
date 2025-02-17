@@ -79,6 +79,7 @@ export class RegisterComponent extends BaseFormComponent implements OnInit {
         },
 
         error: (error) => {
+
           // Marshal login result if we receive BadRequest
           if (error.status == 400) {
             this.registerResult = error.error;

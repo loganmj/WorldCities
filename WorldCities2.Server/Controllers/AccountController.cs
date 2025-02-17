@@ -61,6 +61,7 @@ namespace WorldCities2.Server.Controllers
             // Create a new application user object
             var user = new ApplicationUser
             {
+                UserName = registerRequest.Email,
                 Email = registerRequest.Email
             };
 
