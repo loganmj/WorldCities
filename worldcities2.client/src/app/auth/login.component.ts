@@ -70,9 +70,10 @@ export class LoginComponent extends BaseFormComponent implements OnInit {
           console.log(result);
           this.loginResult = result;
 
-          // If the login was successful, navigate back to home
+          // If the login was successful, check for a return URL (in case the user was trying to log in to access a specific page)
+          // If there is no return url, navigate h
           if (result.success) {
-            this.router.navigate(["/"]);
+            this.router.navigateByUrl(this.activatedRoute.snapshot.queryParams['returnUrl'] || '/');
           }
         },
         error: (error) => {
