@@ -30,26 +30,60 @@ export class CityService extends BaseDataService<City> {
   /**
     * Gets API result data from the API.
     */
-  public getData(pageIndex: number, pageSize: number, sortColumn: string, sortOrder: string, filterColumn: string | null, filterQuery: string | null): Observable<ApiResult<City>> {
+  public getData(pageIndex: number,
+                 pageSize: number,
+                 sortColumn: string,
+                 sortOrder: string,
+                 filterColumn: string | null,
+                 filterQuery: string | null): Observable<ApiResult<City>> {
 
-    // Get URL
-    var url = this.getUrl("api/Cities");
-
-    // Set API result parameters
-    var params = new HttpParams()
-      .set("pageIndex", pageIndex.toString())
-      .set("pageSize", pageSize.toString())
-      .set("sortColumn", sortColumn)
-      .set("sortOrder", sortOrder);
-
-    if (filterColumn && filterQuery) {
-      params = params
-        .set("filterColumn", filterColumn)
-        .set("filterQuery", filterQuery);
-    }
-
-    // Get city data from API
-    return this.http.get<ApiResult<City>>(url, { params });
+    return this.apollo
+      .query({
+        query: gql`
+          query GetCitiesApiResult(
+            $pageIndex: Int!,
+            $pageSize: Int!,
+            $sortColumn: String,
+            $sortOrder: String,
+            $filterColumn: String,
+            $filterQuery: String) {
+            citiesApiResult(
+              pageIndex: $pageIndex
+              pageSize: $pageSize
+              sortColumn: $sortColumn
+              sortOrder: $sortOrder
+              filterColumn: $filterColumn
+              filterQuery: $filterQuery
+            ) {
+              data {
+                id
+                name
+                latitude
+                longitude
+                countryId
+                country
+              }
+              pageIndex
+              pageSize
+              totalCount
+              totalPages
+              sortColumn
+              sortOrder
+              filterColumn
+              filterQuery
+            }
+          }  
+        `,
+        variables: {
+          pageIndex,
+          pageSize,
+          sortColumn,
+          sortOrder,
+          filterColumn,
+          filterQuery
+        }
+      })
+      .pipe(map((result: any) => result.data.citiesApiResult));
   }
 
   /**
