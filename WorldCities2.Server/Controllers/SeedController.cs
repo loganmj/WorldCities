@@ -54,7 +54,7 @@ namespace WorldCities2.Server.Controllers
             }
 
             // Get path to seed file
-            var path = Path.Combine(_environment.ContentRootPath, "Data/Source/worldcities.xlsx");
+            var path = System.IO.Path.Combine(_environment.ContentRootPath, "Data/Source/worldcities.xlsx");
 
             // Construct the file stream and wrap it in our excel package class.
             using var stream = System.IO.File.OpenRead(path);
