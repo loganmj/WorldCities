@@ -17,7 +17,7 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "lib": [ "ESNext", "ESNext.AsyncIterable" ],
+    "lib": [ "ESNext", "DOM", "ESNext.AsyncIterable" ],
     "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {

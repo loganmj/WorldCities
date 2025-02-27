@@ -1,10 +1,12 @@
 import { Injectable } from "@angular/core";
 import { BaseDataService } from "../base-data.service";
 import { City } from "./city";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { ApiResult } from "../apiResult";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Country } from "../countries/country";
+import { Apollo } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 
 /**
  * Data service class for City data.
@@ -18,8 +20,8 @@ export class CityService extends BaseDataService<City> {
 
   /**
    * Constructor
-   */ 
-  public constructor(http: HttpClient) { super(http); }
+   */
+  public constructor(http: HttpClient, private apollo: Apollo) { super(http); }
 
   // #endregion
 
@@ -54,7 +56,24 @@ export class CityService extends BaseDataService<City> {
    * Gets a city.
    */
   public get(id: number): Observable<City> {
-    return this.http.get<City>(this.getUrl(`api/Cities/${id}`));
+    return this.apollo
+      .query({
+        query: gql`
+          query GetCityById($id: Int!) {
+            cities(where: { id: { eq: $id } }) {
+              nodes {
+                id
+                name
+                latitude
+                longitude
+                countryId
+              }
+            }
+          }
+        `,
+        variables: { id }
+      })
+      .pipe(map((result: any) => result.data.cities.nodes[0]));
   }
 
   /**
