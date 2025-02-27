@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,6 +16,7 @@ import { LoginComponent } from './auth/login.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { RegisterComponent } from './auth/register.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { GraphQLModule } from './graphql.module';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    HttpClientModule,
+    GraphQLModule
   ],
   providers: [
     provideAnimationsAsync(),
