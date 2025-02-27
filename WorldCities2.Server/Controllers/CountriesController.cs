@@ -103,7 +103,7 @@ namespace WorldCities2.Server.Controllers
         /// <param name="id"></param>
         /// <param name="country"></param>
         [HttpPut("{id}")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> PutCountry(int id, Country country)
         {
             if (id != country.Id)
@@ -137,7 +137,7 @@ namespace WorldCities2.Server.Controllers
         /// </summary>
         /// <param name="country"></param>
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "RegisteredUser")]
         public async Task<ActionResult<Country>> PostCountry(Country country)
         {
             _context.Countries.Add(country);

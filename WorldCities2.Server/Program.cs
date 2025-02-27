@@ -6,6 +6,7 @@ using OfficeOpenXml;
 using Serilog;
 using Serilog.Events;
 using WorldCities2.Server.Data;
+using WorldCities2.Server.Data.GraphQL;
 using WorldCities2.Server.Data.Models;
 
 // Use non-commercial version of EPPlus
@@ -57,6 +58,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 // Add JWT handler
 builder.Services.AddScoped<JWTHandler>();
 
+// Add GraphQL
+builder.Services.AddGraphQLServer()
+    .AddAuthorization()
+    .AddQueryType<Query>()
+    .AddMutationType<Mutation>()
+    .AddFiltering()
+    .AddSorting();
+
 // Add Authentication services & middlewares
 builder.Services.AddAuthentication(options =>
 {
@@ -96,5 +105,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapGraphQL("/api/graphql");
 app.MapFallbackToFile("/index.html");
 app.Run();
