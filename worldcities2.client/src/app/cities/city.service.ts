@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BaseDataService } from "../base-data.service";
 import { City } from "./city";
-import { map, Observable } from "rxjs";
+import { catchError, map, Observable, throwError } from "rxjs";
 import { ApiResult } from "../apiResult";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Country } from "../countries/country";
@@ -114,14 +114,53 @@ export class CityService extends BaseDataService<City> {
    * Updates a city.
    */
   public put(item: City): Observable<City> {
-    return this.http.put<City>(this.getUrl(`api/Cities/${item.id}`), item);
+    return this.apollo
+      .mutate({
+        mutation: gql`
+          mutation UpdateCity($city: CityDTOInput!) {
+            updateCity(cityDTO: $city) {
+            id
+            name
+            latitude
+            longitude
+            countryID
+            }
+          }
+        `,
+        variables: {
+          city: item
+        }
+      })
+      .pipe(
+        map((result: any) => result.data.updateCity),
+        catchError((error) => {
+          return throwError(() => new Error(error));
+        })
+      );
   }
 
   /**
    * Posts a new city.
    */
   public post(item: City): Observable<City> {
-    return this.http.post<City>(this.getUrl(`api/Cities`), item);
+    return this.apollo
+      .mutate({
+        mutation: gql`
+          mutation AddCity($city: CityDTOInput!) {
+            addCity(cityDTO: $city) {
+              id
+              name
+              latitude
+              longitude
+              countryId
+            }
+          }
+        `,
+        variables: {
+          city: item
+        }
+      })
+      .pipe(map((result: any) => result.data.addCity));
   }
 
   /**
