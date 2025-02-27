@@ -152,7 +152,7 @@ export class CityService extends BaseDataService<City> {
               name
               latitude
               longitude
-              countryId
+              countryID
             }
           }
         `,
@@ -160,7 +160,11 @@ export class CityService extends BaseDataService<City> {
           city: item
         }
       })
-      .pipe(map((result: any) => result.data.addCity));
+      .pipe(
+        map((result: any) => result.data.addCity),
+        catchError((error) => {
+          return throwError(() => new Error(error));
+        }));
   }
 
   /**
